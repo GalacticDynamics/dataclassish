@@ -1,11 +1,21 @@
-"""
-Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
+"""Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
 
 dataclasstools: dataclass tools, extended by multiple dispatch
 """
 
-from __future__ import annotations
-
+from ._core import DataclassInstance, asdict, astuple, fields, replace
+from ._ext import field_items, field_values
 from ._version import version as __version__
 
-__all__ = ["__version__"]
+__all__ = [
+    "__version__",
+    # core
+    "DataclassInstance",
+    "replace",
+    "fields",
+    "asdict",
+    "astuple",
+    # ext
+    "field_values",
+    "field_items",
+]
