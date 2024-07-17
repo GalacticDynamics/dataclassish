@@ -143,6 +143,7 @@ similarities.ignore-imports = "yes"
 messages_control.disable = [
   "design",
   "fixme",
+  "function-redefined",  # for plum-dispatch
   "line-too-long",
   "missing-module-docstring",
   "missing-function-docstring",
