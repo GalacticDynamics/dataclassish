@@ -1,7 +1,7 @@
 <h1 align='center'> dataclasstools </h1>
 <h2 align="center">Tools from dataclasses, extended to all of Python</h2>
 
-Python's `dataclasses` provides powerful tools for working with objects,
+Python's `dataclasses` provides tools for working with objects,
 but only compatible `@dataclass` objects. 😢 </br> This repository is a superset
 of those tools and extends them to work on ANY Python object you want! 🎉 </br>
 You can easily register in object-specific methods and use a unified interface
