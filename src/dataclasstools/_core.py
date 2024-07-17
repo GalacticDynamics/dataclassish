@@ -34,7 +34,7 @@ def replace(obj: DataclassInstance, /, **kwargs: Any) -> DataclassInstance:
 
 
 @dispatch  # type: ignore[misc]
-def fields(obj: DataclassInstance) -> tuple[_dataclass_Field[Any], ...]:
+def fields(obj: DataclassInstance) -> tuple[_dataclass_Field, ...]:  # type: ignore[type-arg]  # TODO: raise issue in beartype
     """Return the fields of a dataclass instance."""
     return _dataclass_fields(obj)
 
