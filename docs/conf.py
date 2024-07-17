@@ -1,9 +1,9 @@
-from __future__ import annotations
+"""Sphinx configuration."""
 
 import importlib.metadata
 
 project = "dataclasstools"
-copyright = "2024, Nathaniel Starkman"
+copyright = "2024, Nathaniel Starkman"  # noqa: A001
 author = "Nathaniel Starkman"
 version = release = importlib.metadata.version("dataclasstools")
 

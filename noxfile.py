@@ -1,4 +1,4 @@
-from __future__ import annotations
+"""Nox configuration."""
 
 import argparse
 import shutil
@@ -15,20 +15,20 @@ nox.options.default_venv_backend = "uv|virtualenv"
 
 @nox.session
 def lint(session: nox.Session) -> None:
-    """
-    Run the linter.
-    """
+    """Run the linter."""
     session.install("pre-commit")
     session.run(
-        "pre-commit", "run", "--all-files", "--show-diff-on-failure", *session.posargs
+        "pre-commit",
+        "run",
+        "--all-files",
+        "--show-diff-on-failure",
+        *session.posargs,
     )
 
 
 @nox.session
 def pylint(session: nox.Session) -> None:
-    """
-    Run PyLint.
-    """
+    """Run PyLint."""
     # This needs to be installed into the package environment, and is slower
     # than a pre-commit check
     session.install(".", "pylint")
@@ -37,23 +37,21 @@ def pylint(session: nox.Session) -> None:
 
 @nox.session
 def tests(session: nox.Session) -> None:
-    """
-    Run the unit and regular tests.
-    """
+    """Run the unit and regular tests."""
     session.install(".[test]")
     session.run("pytest", *session.posargs)
 
 
 @nox.session(reuse_venv=True)
 def docs(session: nox.Session) -> None:
-    """
-    Build the docs. Pass "--serve" to serve. Pass "-b linkcheck" to check links.
-    """
-
+    """Build the docs. Pass "--serve" to serve. Pass "-b linkcheck" to check links."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--serve", action="store_true", help="Serve after building")
     parser.add_argument(
-        "-b", dest="builder", default="html", help="Build target (default: html)"
+        "-b",
+        dest="builder",
+        default="html",
+        help="Build target (default: html)",
     )
     args, posargs = parser.parse_known_args(session.posargs)
 
@@ -67,7 +65,12 @@ def docs(session: nox.Session) -> None:
 
     if args.builder == "linkcheck":
         session.run(
-            "sphinx-build", "-b", "linkcheck", ".", "_build/linkcheck", *posargs
+            "sphinx-build",
+            "-b",
+            "linkcheck",
+            ".",
+            "_build/linkcheck",
+            *posargs,
         )
         return
 
@@ -88,10 +91,7 @@ def docs(session: nox.Session) -> None:
 
 @nox.session
 def build_api_docs(session: nox.Session) -> None:
-    """
-    Build (regenerate) API docs.
-    """
-
+    """Build (regenerate) API docs."""
     session.install("sphinx")
     session.chdir("docs")
     session.run(
@@ -107,10 +107,7 @@ def build_api_docs(session: nox.Session) -> None:
 
 @nox.session
 def build(session: nox.Session) -> None:
-    """
-    Build an SDist and wheel.
-    """
-
+    """Build an SDist and wheel."""
     build_path = DIR.joinpath("build")
     if build_path.exists():
         shutil.rmtree(build_path)
