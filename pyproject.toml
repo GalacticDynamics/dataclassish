@@ -30,6 +30,7 @@ classifiers = [
 dynamic = ["version"]
 dependencies = [
   "plum-dispatch>=2.5.1",
+  "typing_extensions",
 ]
 
 [project.optional-dependencies]
