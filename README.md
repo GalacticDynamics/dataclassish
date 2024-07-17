@@ -1,5 +1,5 @@
 <h1 align='center'> dataclasstools </h1>
-<h2 align="center">Tools from dataclasses, extended to all of Python</h2>
+<h2 align="center">Tools from <code>dataclasses</code>, extended to all of Python</h2>
 
 Python's `dataclasses` provides tools for working with objects, but only
 compatible `@dataclass` objects. 😢 </br> This repository is a superset of those
