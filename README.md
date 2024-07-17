@@ -1,9 +1,11 @@
 <h1 align='center'> dataclasstools </h1>
 <h2 align="center">Tools from dataclasses, extended to all of Python</h2>
 
-Python's `dataclasses` library provides powerful tools for working with objects, but only compatible `@dataclass` objects. 😢  
-This repository is a superset of those tools and extends them to work on ANY Python object you want! 🎉  
-You can easily register in object-specific methods and use a unified interface for object manipulation. 🕶️
+Python's `dataclasses` library provides powerful tools for working with objects,
+but only compatible `@dataclass` objects. 😢 This repository is a superset of
+those tools and extends them to work on ANY Python object you want! 🎉 You can
+easily register in object-specific methods and use a unified interface for
+object manipulation. 🕶️
 
 For example,
 
@@ -11,11 +13,10 @@ For example,
 from dataclasstools import replace  # New object, replacing select fields
 
 d1 = {"a": 1, "b": 2.0, "c": "3"}
-d2 = replace(d1, c=3+0j)
+d2 = replace(d1, c=3 + 0j)
 print(d2)
 # {'a': 1, 'b': 2.0, 'c': (3+0j)}
 ```
-
 
 ## Installation
 
@@ -32,20 +33,25 @@ pip install dataclasstools
 
 [![Documentation Status][rtd-badge]][rtd-link]
 
-WIP. But if you've worked with a [`dataclass`](https://docs.python.org/3/library/dataclasses.html) then you basically already know everything you need to know.
+WIP. But if you've worked with a
+[`dataclass`](https://docs.python.org/3/library/dataclasses.html) then you
+basically already know everything you need to know.
 
 ## Quick example
 
-In this Example we'll show how `dataclasstools` works exactly the same as `dataclasses` when working with a `@dataclass` object.
+In this Example we'll show how `dataclasstools` works exactly the same as
+`dataclasses` when working with a `@dataclass` object.
 
 ```python
 from dataclasstools import replace
 from dataclasses import dataclass
 
+
 @dataclass
 class Point:
     x: float
     y: float
+
 
 p = Point(1.0, 2.0)
 print(p)
@@ -54,10 +60,10 @@ print(p)
 p2 = replace(p, x=3.0)
 print(p2)
 # Point(x=3.0, y=2.0)
-
 ```
 
-Now we'll work with a `dict` object. Note that you cannot use tools from `dataclasses` with `dict` objects.
+Now we'll work with a `dict` object. Note that you cannot use tools from
+`dataclasses` with `dict` objects.
 
 ```python
 from dataclasstools import replace
@@ -71,31 +77,37 @@ print(p2)
 # {'x': 3.0, 'y': 2.0}
 
 # If we try to `replace` a value that isn't in the dict, we'll get an error
-try: replace(p, z=None)
-except ValueError as e: print(e)
+try:
+    replace(p, z=None)
+except ValueError as e:
+    print(e)
 # invalid keys {'z'}.
 ```
 
-Registering in a custom type is very easy!  
-Let's make a custom object and define how `replace` will operate on it.
+Registering in a custom type is very easy! Let's make a custom object and define
+how `replace` will operate on it.
 
 ```python
 from typing import Any
 from plum import dispatch
 
+
 class MyClass:
     def __init__(self, a, b, c):
-       self.a = a
-       self.b = b
-       self.c = c
+        self.a = a
+        self.b = b
+        self.c = c
+
     def __repr__(self) -> str:
         return f"MyClass(a={self.a},b={self.b},c={self.c})"
+
 
 @dispatch
 def replace(obj: MyClass, **changes: Any) -> MyClass:
     current_args = {k: getattr(obj, k) for k in "abc"}
     updated_args = current_args | changes
     return MyClass(**updated_args)
+
 
 obj = MyClass(1, 2, 3)
 print(obj)
@@ -105,7 +117,6 @@ obj2 = replace(obj, c=4.0)
 print(obj2)
 # MyClass(a=1,b=2,c=4.0)
 ```
-
 
 ## Citation
 
