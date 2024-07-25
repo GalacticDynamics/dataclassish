@@ -40,7 +40,7 @@ def field_keys(obj: Any, /) -> Iterator[str]:
 
 @dispatch  # type: ignore[no-redef]
 # TODO: def field_keys(obj: Mapping[K, V]) -> Iterator[K]:
-def field_keys(obj: Mapping[Any, Any]) -> KeysView[Hashable]:
+def field_keys(obj: Mapping[Hashable, Any]) -> KeysView[Hashable]:
     """Return the keys of a mapping.
 
     Examples
