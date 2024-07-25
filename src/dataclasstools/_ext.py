@@ -40,7 +40,7 @@ def field_keys(obj: Any, /) -> Iterator[str]:
 
 @dispatch  # type: ignore[no-redef]
 # TODO: def field_keys(obj: Mapping[K, V]) -> Iterator[K]:
-def field_keys(obj: Mapping[Hashable, Any]) -> KeysView[Hashable]:
+def field_keys(obj: Mapping[Any, Any]) -> KeysView[Hashable]:
     """Return the keys of a mapping.
 
     Examples
@@ -48,8 +48,8 @@ def field_keys(obj: Mapping[Hashable, Any]) -> KeysView[Hashable]:
     >>> from dataclasstools import field_keys
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
-    >>> list(field_keys(p))
-    ['a', 'b', 'c']
+    >>> field_keys(p)
+    dict_keys(['a', 'b', 'c'])
 
     """
     return obj.keys()
@@ -91,8 +91,8 @@ def field_values(obj: Mapping[Any, Any]) -> ValuesView[Any]:
     >>> from dataclasstools import field_values
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
-    >>> list(field_values(p))
-    [1, 2.0, '3']
+    >>> field_values(p)
+    dict_values([1, 2.0, '3'])
 
     """
     return obj.values()
@@ -134,8 +134,8 @@ def field_items(obj: Mapping[Any, Any]) -> ItemsView[Any, Any]:
     >>> from dataclasstools import field_items
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
-    >>> list(field_items(p))
-    [('a', 1), ('b', 2.0), ('c', '3')]
+    >>> field_items(p)
+    dict_items([('a', 1), ('b', 2.0), ('c', '3')])
 
     """
     return obj.items()
