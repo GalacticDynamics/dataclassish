@@ -2,7 +2,7 @@
 
 __all__ = ["field_keys", "field_values", "field_items"]
 
-from collections.abc import Hashable, Iterator, Mapping
+from collections.abc import Hashable, ItemsView, Iterator, KeysView, Mapping, ValuesView
 from typing import Any, TypeVar
 
 from plum import dispatch
@@ -40,7 +40,7 @@ def field_keys(obj: Any, /) -> Iterator[str]:
 
 @dispatch  # type: ignore[no-redef]
 # TODO: def field_keys(obj: Mapping[K, V]) -> Iterator[K]:
-def field_keys(obj: Mapping[Hashable, Any]) -> Iterator[Hashable]:
+def field_keys(obj: Mapping[Hashable, Any]) -> KeysView[Hashable]:
     """Return the keys of a mapping.
 
     Examples
@@ -52,7 +52,7 @@ def field_keys(obj: Mapping[Hashable, Any]) -> Iterator[Hashable]:
     ['a', 'b', 'c']
 
     """
-    yield from obj.keys()
+    return obj.keys()
 
 
 # ===================================================================
@@ -83,7 +83,7 @@ def field_values(obj: Any, /) -> Iterator[Any]:
 
 @dispatch  # type: ignore[no-redef]
 # TODO: def field_values(obj: Mapping[Any, V]) -> Iterator[V]:
-def field_values(obj: Mapping[Any, Any]) -> Iterator[Any]:
+def field_values(obj: Mapping[Any, Any]) -> ValuesView[Any]:
     """Return the values of a mapping.
 
     Examples
@@ -95,7 +95,7 @@ def field_values(obj: Mapping[Any, Any]) -> Iterator[Any]:
     [1, 2.0, '3']
 
     """
-    yield from obj.values()
+    return obj.values()
 
 
 # ===================================================================
@@ -126,7 +126,7 @@ def field_items(obj: Any) -> Iterator[tuple[str, Any]]:
 
 @dispatch  # type: ignore[no-redef]
 # TODO: def field_items(obj: Mapping[K, V]) -> Iterator[tuple[K, V]]:
-def field_items(obj: Mapping[Any, Any]) -> Iterator[tuple[Any, Any]]:
+def field_items(obj: Mapping[Any, Any]) -> ItemsView[Any, Any]:
     """Return the items of a mapping.
 
     Examples
@@ -138,4 +138,4 @@ def field_items(obj: Mapping[Any, Any]) -> Iterator[tuple[Any, Any]]:
     [('a', 1), ('b', 2.0), ('c', '3')]
 
     """
-    yield from obj.items()
+    return obj.items()
