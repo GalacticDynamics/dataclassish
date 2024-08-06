@@ -42,7 +42,7 @@ class F(Generic[V]):
     >>> from dataclassish import F
 
     >>> F(1)
-    F(1)
+    F(value=1)
 
     """
 
@@ -164,8 +164,9 @@ def replace(
     >>> replace(p, {"c": {"aa": 6}})
     {'a': 1, 'b': 2.0, 'c': {'aa': 6, 'bb': 4}}
 
+    >>> from plum import NotFoundLookupError
     >>> try: replace(p, {"c": {"aa": 6, "bb": {"d": 7}}})
-    ... except ValueError as e: print(e)
+    ... except NotFoundLookupError as e: print(e)
     `replace(4, {'d': 7})` could not be resolved...
 
     >>> replace(p, {"c": F({"aa": 6, "bb": {"d": 7}})})
