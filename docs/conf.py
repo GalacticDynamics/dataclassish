@@ -2,10 +2,10 @@
 
 import importlib.metadata
 
-project = "dataclasstools"
+project = "dataclassish"
 copyright = "2024, Nathaniel Starkman"  # noqa: A001
 author = "Nathaniel Starkman"
-version = release = importlib.metadata.version("dataclasstools")
+version = release = importlib.metadata.version("dataclassish")
 
 extensions = [
     "myst_parser",

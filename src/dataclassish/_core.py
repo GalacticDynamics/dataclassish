@@ -1,4 +1,4 @@
-"""Core module for ``dataclasstools``."""
+"""Core module for ``dataclassish``."""
 
 __all__ = ["DataclassInstance", "replace", "fields", "asdict", "astuple"]
 
@@ -41,7 +41,7 @@ def replace(obj: DataclassInstance, /, **kwargs: Any) -> DataclassInstance:
     Examples
     --------
     >>> from dataclasses import dataclass
-    >>> from dataclasstools import replace
+    >>> from dataclassish import replace
 
     >>> @dataclass
     ... class Point:
@@ -69,7 +69,7 @@ def replace(obj: Mapping[Hashable, Any], /, **kwargs: Any) -> Mapping[Hashable, 
     Examples
     --------
     >>> from dataclasses import dataclass
-    >>> from dataclasstools import replace
+    >>> from dataclassish import replace
 
     >>> p = {"a": 1, "b": 2, "c": 3}
     >>> p
@@ -98,7 +98,7 @@ def fields(obj: DataclassInstance, /) -> tuple[Field, ...]:  # type: ignore[type
     Examples
     --------
     >>> from dataclasses import dataclass
-    >>> from dataclasstools import fields
+    >>> from dataclassish import fields
 
     >>> @dataclass
     ... class Point:
@@ -120,7 +120,7 @@ def fields(obj: Mapping[str, Any], /) -> tuple[Field, ...]:  # type: ignore[type
 
     Examples
     --------
-    >>> from dataclasstools import fields
+    >>> from dataclassish import fields
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
     >>> fields(p)
@@ -152,7 +152,7 @@ def asdict(
     Examples
     --------
     >>> from dataclasses import dataclass
-    >>> from dataclasstools import asdict
+    >>> from dataclassish import asdict
 
     >>> @dataclass
     ... class Point:
@@ -181,7 +181,7 @@ def asdict(
 
     Examples
     --------
-    >>> from dataclasstools import asdict
+    >>> from dataclassish import asdict
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
     >>> asdict(p)
@@ -209,7 +209,7 @@ def astuple(
     Examples
     --------
     >>> from dataclasses import dataclass
-    >>> from dataclasstools import astuple
+    >>> from dataclassish import astuple
 
     >>> @dataclass
     ... class Point:
@@ -234,7 +234,7 @@ def astuple(
 
     Examples
     --------
-    >>> from dataclasstools import astuple
+    >>> from dataclassish import astuple
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
     >>> astuple(p)

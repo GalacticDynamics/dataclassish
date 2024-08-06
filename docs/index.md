@@ -1,4 +1,4 @@
-# dataclasstools
+# dataclassish
 
 ```{toctree}
 :maxdepth: 2

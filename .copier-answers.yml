@@ -6,7 +6,7 @@ email: nstarman@users.noreply.github.com
 full_name: Nathaniel Starkman
 license: MIT
 org: GalacticDynamics
-project_name: dataclasstools
+project_name: dataclassish
 project_short_description: dataclass tools, extended by multiple dispatch
-url: https://github.com/GalacticDynamics/dataclasstools
+url: https://github.com/GalacticDynamics/dataclassish
 vcs: true

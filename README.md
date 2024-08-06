@@ -1,4 +1,4 @@
-<h1 align='center'> dataclasstools </h1>
+<h1 align='center'> dataclassish </h1>
 <h2 align="center">Tools from <code>dataclasses</code>, extended to all of Python</h2>
 
 Python's `dataclasses` provides tools for working with objects, but only
@@ -10,7 +10,7 @@ object manipulation. 🕶️
 For example,
 
 ```python
-from dataclasstools import replace  # New object, replacing select fields
+from dataclassish import replace  # New object, replacing select fields
 
 d1 = {"a": 1, "b": 2.0, "c": "3"}
 d2 = replace(d1, c=3 + 0j)
@@ -26,7 +26,7 @@ print(d2)
 <!-- [![Conda-Forge][conda-badge]][conda-link] -->
 
 ```bash
-pip install dataclasstools
+pip install dataclassish
 ```
 
 ## Documentation
@@ -39,11 +39,11 @@ basically already know everything you need to know.
 
 ## Quick example
 
-In this Example we'll show how `dataclasstools` works exactly the same as
+In this Example we'll show how `dataclassish` works exactly the same as
 `dataclasses` when working with a `@dataclass` object.
 
 ```python
-from dataclasstools import replace
+from dataclassish import replace
 from dataclasses import dataclass
 
 
@@ -66,7 +66,7 @@ Now we'll work with a `dict` object. Note that you cannot use tools from
 `dataclasses` with `dict` objects.
 
 ```python
-from dataclasstools import replace
+from dataclassish import replace
 
 p = {"x": 1, "y": 2.0}
 print(p)
@@ -135,17 +135,17 @@ We welcome contributions!
 <!-- SPHINX-START -->
 
 <!-- prettier-ignore-start -->
-[actions-badge]:            https://github.com/GalacticDynamics/dataclasstools/workflows/CI/badge.svg
-[actions-link]:             https://github.com/GalacticDynamics/dataclasstools/actions
-[conda-badge]:              https://img.shields.io/conda/vn/conda-forge/dataclasstools
-[conda-link]:               https://github.com/conda-forge/dataclasstools-feedstock
+[actions-badge]:            https://github.com/GalacticDynamics/dataclassish/workflows/CI/badge.svg
+[actions-link]:             https://github.com/GalacticDynamics/dataclassish/actions
+[conda-badge]:              https://img.shields.io/conda/vn/conda-forge/dataclassish
+[conda-link]:               https://github.com/conda-forge/dataclassish-feedstock
 <!-- [github-discussions-badge]: https://img.shields.io/static/v1?label=Discussions&message=Ask&color=blue&logo=github
-[github-discussions-link]:  https://github.com/GalacticDynamics/dataclasstools/discussions -->
-[pypi-link]:                https://pypi.org/project/dataclasstools/
-[pypi-platforms]:           https://img.shields.io/pypi/pyversions/dataclasstools
-[pypi-version]:             https://img.shields.io/pypi/v/dataclasstools
-[rtd-badge]:                https://readthedocs.org/projects/dataclasstools/badge/?version=latest
-[rtd-link]:                 https://dataclasstools.readthedocs.io/en/latest/?badge=latest
+[github-discussions-link]:  https://github.com/GalacticDynamics/dataclassish/discussions -->
+[pypi-link]:                https://pypi.org/project/dataclassish/
+[pypi-platforms]:           https://img.shields.io/pypi/pyversions/dataclassish
+[pypi-version]:             https://img.shields.io/pypi/v/dataclassish
+[rtd-badge]:                https://readthedocs.org/projects/dataclassish/badge/?version=latest
+[rtd-link]:                 https://dataclassish.readthedocs.io/en/latest/?badge=latest
 [zenodo-badge]:             https://zenodo.org/badge/755708966.svg
 [zenodo-link]:              https://zenodo.org/doi/10.5281/zenodo.10850557
 

@@ -1,6 +1,6 @@
 """Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
 
-dataclasstools: dataclass tools, extended by multiple dispatch
+dataclassish: dataclass tools, extended by multiple dispatch
 """
 
 from ._core import DataclassInstance, asdict, astuple, fields, replace
