@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 
 [project]
-name = "dataclasstools"
+name = "dataclassish"
 authors = [
   { name = "Nathaniel Starkman", email = "nstarman@users.noreply.github.com" },
 ]
@@ -52,15 +52,15 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/GalacticDynamics/dataclasstools"
-"Bug Tracker" = "https://github.com/GalacticDynamics/dataclasstools/issues"
-Discussions = "https://github.com/GalacticDynamics/dataclasstools/discussions"
-Changelog = "https://github.com/GalacticDynamics/dataclasstools/releases"
+Homepage = "https://github.com/GalacticDynamics/dataclassish"
+"Bug Tracker" = "https://github.com/GalacticDynamics/dataclassish/issues"
+Discussions = "https://github.com/GalacticDynamics/dataclassish/discussions"
+Changelog = "https://github.com/GalacticDynamics/dataclassish/releases"
 
 
 [tool.hatch]
 version.source = "vcs"
-build.hooks.vcs.version-file = "src/dataclasstools/_version.py"
+build.hooks.vcs.version-file = "src/dataclassish/_version.py"
 
 [tool.hatch.envs.default]
 features = ["test"]
@@ -81,7 +81,7 @@ testpaths = [
 
 
 [tool.coverage]
-run.source = ["dataclasstools"]
+run.source = ["dataclassish"]
 report.exclude_also = [
   '\.\.\.',
   'if typing.TYPE_CHECKING:',
@@ -98,7 +98,7 @@ disallow_untyped_defs = false
 disallow_incomplete_defs = false
 
 [[tool.mypy.overrides]]
-module = "dataclasstools.*"
+module = "dataclassish.*"
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 

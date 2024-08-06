@@ -1,4 +1,4 @@
-"""Extension functions for ``dataclasstools``."""
+"""Extension functions for ``dataclassish``."""
 
 __all__ = ["field_keys", "field_values", "field_items"]
 
@@ -18,12 +18,12 @@ V = TypeVar("V")
 
 @dispatch
 def field_keys(obj: Any, /) -> Iterator[str]:
-    """Yield the field names from the `dataclasstools.fields`.
+    """Yield the field names from the `dataclassish.fields`.
 
     Examples
     --------
     >>> from dataclasses import dataclass
-    >>> from dataclasstools import field_keys
+    >>> from dataclassish import field_keys
 
     >>> @dataclass
     ... class Point:
@@ -45,7 +45,7 @@ def field_keys(obj: Mapping[Hashable, Any]) -> KeysView[Hashable]:
 
     Examples
     --------
-    >>> from dataclasstools import field_keys
+    >>> from dataclassish import field_keys
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
     >>> field_keys(p)
@@ -61,12 +61,12 @@ def field_keys(obj: Mapping[Hashable, Any]) -> KeysView[Hashable]:
 
 @dispatch
 def field_values(obj: Any, /) -> Iterator[Any]:
-    """Yield the field values from the `dataclasstools.fields`.
+    """Yield the field values from the `dataclassish.fields`.
 
     Examples
     --------
     >>> from dataclasses import dataclass
-    >>> from dataclasstools import field_values
+    >>> from dataclassish import field_values
 
     >>> @dataclass
     ... class Point:
@@ -88,7 +88,7 @@ def field_values(obj: Mapping[Any, Any]) -> ValuesView[Any]:
 
     Examples
     --------
-    >>> from dataclasstools import field_values
+    >>> from dataclassish import field_values
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
     >>> field_values(p)
@@ -104,12 +104,12 @@ def field_values(obj: Mapping[Any, Any]) -> ValuesView[Any]:
 
 @dispatch
 def field_items(obj: Any) -> Iterator[tuple[str, Any]]:
-    """Yield the field names and values from the `dataclasstools.fields`.
+    """Yield the field names and values from the `dataclassish.fields`.
 
     Examples
     --------
     >>> from dataclasses import dataclass
-    >>> from dataclasstools import field_items
+    >>> from dataclassish import field_items
 
     >>> @dataclass
     ... class Point:
@@ -131,7 +131,7 @@ def field_items(obj: Mapping[Any, Any]) -> ItemsView[Any, Any]:
 
     Examples
     --------
-    >>> from dataclasstools import field_items
+    >>> from dataclassish import field_items
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
     >>> field_items(p)
