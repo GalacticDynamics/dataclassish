@@ -133,10 +133,8 @@ def replace(obj: DataclassInstance, fs: Mapping[str, Any], /) -> DataclassInstan
                   b=Point(x=3.0, y=4.0))
 
     """
-    return _dataclass_replace(
-        obj,
-        **{k: _recursive_replace_dataclass_helper(obj, k, v) for k, v in fs.items()},
-    )
+    kwargs = {k: _recursive_replace_dataclass_helper(obj, k, v) for k, v in fs.items()}
+    return _dataclass_replace(obj, **kwargs)
 
 
 @dispatch  # type: ignore[no-redef]
