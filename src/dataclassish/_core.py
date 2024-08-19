@@ -35,7 +35,7 @@ class DataclassInstance(Protocol):
 
 @dataclass(frozen=True, slots=True)
 class F(Generic[V]):
-    """Mark a field as a dataclass field.
+    """Mark a field as a dataclass field when doing multi-level replacement.
 
     Examples
     --------
@@ -43,6 +43,18 @@ class F(Generic[V]):
 
     >>> F(1)
     F(value=1)
+
+    >>> p = {"a": 1, "b": 2.0, "c": {"aa": 3, "bb": 4}}
+    >>> replace(p, {"c": {"aa": 6}})
+    {'a': 1, 'b': 2.0, 'c': {'aa': 6, 'bb': 4}}
+
+    >>> from plum import NotFoundLookupError
+    >>> try: replace(p, {"c": {"aa": 6, "bb": {"d": 7}}})
+    ... except NotFoundLookupError as e: print(e)
+    `replace(4, {'d': 7})` could not be resolved...
+
+    >>> replace(p, {"c": F({"aa": 6, "bb": {"d": 7}})})
+    {'a': 1, 'b': 2.0, 'c': {'aa': 6, 'bb': {'d': 7}}}
 
     """
 
@@ -53,7 +65,7 @@ class F(Generic[V]):
 # Replace
 
 
-@dispatch
+@dispatch  # type: ignore[misc]
 def replace(obj: DataclassInstance, /, **kwargs: Any) -> DataclassInstance:
     """Replace the fields of a dataclass instance.
 
@@ -76,6 +88,18 @@ def replace(obj: DataclassInstance, /, **kwargs: Any) -> DataclassInstance:
 
     """
     return _dataclass_replace(obj, **kwargs)
+
+
+def _recursive_replace_dataclass_helper(
+    obj: DataclassInstance, k: str, v: Any, /
+) -> Any:
+    if isinstance(v, F):
+        out = v.value
+    elif isinstance(v, Mapping):
+        out = replace(getattr(obj, k), v)
+    else:
+        out = v
+    return out
 
 
 @dispatch  # type: ignore[no-redef]
@@ -109,17 +133,10 @@ def replace(obj: DataclassInstance, fs: Mapping[str, Any], /) -> DataclassInstan
                   b=Point(x=3.0, y=4.0))
 
     """
-
-    def _v(obj: DataclassInstance, k: str, v: Any, /) -> Any:
-        if isinstance(v, F):
-            out = v.value
-        elif isinstance(v, Mapping):
-            out = replace(getattr(obj, k), v)
-        else:
-            out = v
-        return out
-
-    return _dataclass_replace(obj, **{k: _v(obj, k, v) for k, v in fs.items()})
+    return _dataclass_replace(
+        obj,
+        **{k: _recursive_replace_dataclass_helper(obj, k, v) for k, v in fs.items()},
+    )
 
 
 @dispatch  # type: ignore[no-redef]
@@ -150,7 +167,19 @@ def replace(obj: Mapping[Hashable, Any], /, **kwargs: Any) -> Mapping[Hashable, 
     return type(obj)(**{**obj, **kwargs})
 
 
-@dispatch  # type: ignore[no-redef]
+def _recursive_replace_mapping_helper(
+    obj: Mapping[Hashable, Any], k: str, v: Any, /
+) -> Any:
+    if isinstance(v, F):
+        out = v.value
+    elif isinstance(v, Mapping):
+        out = replace(obj[k], v)
+    else:
+        out = v
+    return out
+
+
+@dispatch  # type: ignore[misc,no-redef]
 def replace(
     obj: Mapping[Hashable, Any], fs: Mapping[str, Any], /
 ) -> Mapping[Hashable, Any]:
@@ -173,20 +202,10 @@ def replace(
     {'a': 1, 'b': 2.0, 'c': {'aa': 6, 'bb': {'d': 7}}}
 
     """
-
-    def _v(obj: Mapping[Hashable, Any], k: str, v: Any, /) -> Any:
-        if isinstance(v, F):
-            out = v.value
-        elif isinstance(v, Mapping):
-            out = replace(obj[k], v)
-        else:
-            out = v
-        return out
-
     # Recursively replace the fields
-    kwargs = {k: _v(obj, k, v) for k, v in fs.items()}
+    kwargs = {k: _recursive_replace_mapping_helper(obj, k, v) for k, v in fs.items()}
 
-    return type(obj)(**{**obj, **kwargs})
+    return type(obj)(**(dict(obj) | kwargs))
 
 
 # ===================================================================
