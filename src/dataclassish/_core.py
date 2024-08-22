@@ -1,19 +1,22 @@
 """Core module for ``dataclassish``."""
 
-__all__ = ["DataclassInstance", "replace", "fields", "asdict", "astuple"]
+__all__ = ["DataclassInstance", "replace", "fields", "asdict", "astuple", "F"]
 
 from collections.abc import Callable, Hashable, Mapping
 from dataclasses import (
     Field,
     asdict as _dataclass_asdict,
     astuple as _dataclass_astuple,
+    dataclass,
     field,
     fields as _dataclass_fields,
     replace as _dataclass_replace,
 )
-from typing import Any, ClassVar, Protocol, runtime_checkable
+from typing import Any, ClassVar, Generic, Protocol, TypeVar, runtime_checkable
 
 from plum import dispatch
+
+V = TypeVar("V")
 
 
 @runtime_checkable
@@ -30,11 +33,39 @@ class DataclassInstance(Protocol):
         return hasattr(c, "__dataclass_fields__")
 
 
+@dataclass(frozen=True, slots=True)
+class F(Generic[V]):
+    """Mark a field as a dataclass field when doing multi-level replacement.
+
+    Examples
+    --------
+    >>> from dataclassish import F
+
+    >>> F(1)
+    F(value=1)
+
+    >>> p = {"a": 1, "b": 2.0, "c": {"aa": 3, "bb": 4}}
+    >>> replace(p, {"c": {"aa": 6}})
+    {'a': 1, 'b': 2.0, 'c': {'aa': 6, 'bb': 4}}
+
+    >>> from plum import NotFoundLookupError
+    >>> try: replace(p, {"c": {"aa": 6, "bb": {"d": 7}}})
+    ... except NotFoundLookupError as e: print(e)
+    `replace(4, {'d': 7})` could not be resolved...
+
+    >>> replace(p, {"c": F({"aa": 6, "bb": {"d": 7}})})
+    {'a': 1, 'b': 2.0, 'c': {'aa': 6, 'bb': {'d': 7}}}
+
+    """
+
+    value: V
+
+
 # ===================================================================
 # Replace
 
 
-@dispatch
+@dispatch  # type: ignore[misc]
 def replace(obj: DataclassInstance, /, **kwargs: Any) -> DataclassInstance:
     """Replace the fields of a dataclass instance.
 
@@ -56,6 +87,53 @@ def replace(obj: DataclassInstance, /, **kwargs: Any) -> DataclassInstance:
     Point(x=3.0, y=2.0)
 
     """
+    return _dataclass_replace(obj, **kwargs)
+
+
+def _recursive_replace_dataclass_helper(
+    obj: DataclassInstance, k: str, v: Any, /
+) -> Any:
+    if isinstance(v, F):
+        out = v.value
+    elif isinstance(v, Mapping):
+        out = replace(getattr(obj, k), v)
+    else:
+        out = v
+    return out
+
+
+@dispatch  # type: ignore[no-redef]
+def replace(obj: DataclassInstance, fs: Mapping[str, Any], /) -> DataclassInstance:
+    """Replace the fields of a dataclass instance.
+
+    Examples
+    --------
+    >>> from dataclasses import dataclass
+    >>> from dataclassish import replace, F
+
+    >>> @dataclass
+    ... class Point:
+    ...     x: float | dict
+    ...     y: float
+
+    >>> @dataclass
+    ... class PointofPoints:
+    ...     a: Point
+    ...     b: Point
+
+    >>> p = PointofPoints(Point(1.0, 2.0), Point(3.0, 4.0))
+    >>> p
+    PointofPoints(a=Point(x=1.0, y=2.0), b=Point(x=3.0, y=4.0))
+
+    >>> replace(p, {"a": {"x": 5.0}, "b": {"y": 6.0}})
+    PointofPoints(a=Point(x=5.0, y=2.0), b=Point(x=3.0, y=6.0))
+
+    >>> replace(p, {"a": {"x": F({"thing": 5.0})}})
+    PointofPoints(a=Point(x={'thing': 5.0}, y=2.0),
+                  b=Point(x=3.0, y=4.0))
+
+    """
+    kwargs = {k: _recursive_replace_dataclass_helper(obj, k, v) for k, v in fs.items()}
     return _dataclass_replace(obj, **kwargs)
 
 
@@ -85,6 +163,47 @@ def replace(obj: Mapping[Hashable, Any], /, **kwargs: Any) -> Mapping[Hashable, 
         raise ValueError(msg)
 
     return type(obj)(**{**obj, **kwargs})
+
+
+def _recursive_replace_mapping_helper(
+    obj: Mapping[Hashable, Any], k: str, v: Any, /
+) -> Any:
+    if isinstance(v, F):
+        out = v.value
+    elif isinstance(v, Mapping):
+        out = replace(obj[k], v)
+    else:
+        out = v
+    return out
+
+
+@dispatch  # type: ignore[misc,no-redef]
+def replace(
+    obj: Mapping[Hashable, Any], fs: Mapping[str, Any], /
+) -> Mapping[Hashable, Any]:
+    """Replace the fields of a mapping.
+
+    Examples
+    --------
+    >>> from dataclassish import replace, F
+
+    >>> p = {"a": 1, "b": 2.0, "c": {"aa": 3, "bb": 4}}
+    >>> replace(p, {"c": {"aa": 6}})
+    {'a': 1, 'b': 2.0, 'c': {'aa': 6, 'bb': 4}}
+
+    >>> from plum import NotFoundLookupError
+    >>> try: replace(p, {"c": {"aa": 6, "bb": {"d": 7}}})
+    ... except NotFoundLookupError as e: print(e)
+    `replace(4, {'d': 7})` could not be resolved...
+
+    >>> replace(p, {"c": F({"aa": 6, "bb": {"d": 7}})})
+    {'a': 1, 'b': 2.0, 'c': {'aa': 6, 'bb': {'d': 7}}}
+
+    """
+    # Recursively replace the fields
+    kwargs = {k: _recursive_replace_mapping_helper(obj, k, v) for k, v in fs.items()}
+
+    return type(obj)(**(dict(obj) | kwargs))
 
 
 # ===================================================================
