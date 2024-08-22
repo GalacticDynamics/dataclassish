@@ -1,11 +1,11 @@
 <h1 align='center'> dataclassish </h1>
 <h2 align="center">Tools from <code>dataclasses</code>, extended to all of Python</h2>
 
-Python's `dataclasses` provides tools for working with objects, but only
-compatible `@dataclass` objects. 😢 </br> This repository is a superset of those
-tools and extends them to work on ANY Python object you want! 🎉 </br> You can
-easily register in object-specific methods and use a unified interface for
-object manipulation. 🕶️
+Python's [`dataclasses`][dataclasses-link] provides tools for working with
+objects, but only compatible `@dataclass` objects. 😢 </br> This repository is a
+superset of those tools and extends them to work on ANY Python object you want!
+🎉 </br> You can easily register in object-specific methods and use a unified
+interface for object manipulation. 🕶️
 
 For example,
 
@@ -40,7 +40,7 @@ basically already know everything you need to know.
 ## Quick example
 
 In this Example we'll show how `dataclassish` works exactly the same as
-`dataclasses` when working with a `@dataclass` object.
+[`dataclasses`][dataclasses-link] when working with a `@dataclass` object.
 
 ```python
 from dataclassish import replace
@@ -62,8 +62,8 @@ print(p2)
 # Point(x=3.0, y=2.0)
 ```
 
-Now we'll work with a `dict` object. Note that you cannot use tools from
-`dataclasses` with `dict` objects.
+Now we'll work with a [`dict`][dict-link] object. Note that you cannot use tools
+from [`dataclasses`][dataclasses-link] with [`dict`][dict-link] objects.
 
 ```python
 from dataclassish import replace
@@ -118,6 +118,70 @@ print(obj2)
 # MyClass(a=1,b=2,c=4.0)
 ```
 
+`replace` can also accept a second positional argument which is a dictionary
+specifying a nested replacement. For example consider the following dict:
+
+```python
+p = {"a": {"a1": 1, "a2": 2}, "b": {"b1": 3, "b2": 4}, "c": {"c1": 5, "c2": 6}}
+```
+
+With `replace` the sub-dicts can be updated via:
+
+```python
+replace(p, {"a": {"a1": 1.5}, "b": {"b2": 4.5}, "c": {"c1": 5.5}})
+# {'a': {'a1': 1.5, 'a2': 2}, 'b': {'b1': 3, 'b2': 4.5}, 'c': {'c1': 5.5, 'c2': 6}}
+```
+
+In contrast in pure Python this would be:
+
+```python
+from copy import deepcopy
+
+newp = deepcopy(p)
+newp["a"]["a1"] = 1.5
+newp["b"]["b2"] = 4.5
+newp["c"]["c1"] = 5.5
+```
+
+And this is the simplest case, where the mutability of a [`dict`][dict-link]
+allows us to copy the full object and update it after. Note that we had to use
+[`deepcopy`](https://docs.python.org/3/library/copy.html#copy.deepcopy) to avoid
+mutating the sub-dicts. So what if the objects are immutable?
+
+```python
+@dataclass(frozen=True)
+class Object:
+    x: float | dict
+    y: float
+
+
+@dataclass(frozen=True)
+class Collection:
+    a: Object
+    b: Object
+
+
+p = Collection(Object(1.0, 2.0), Object(3.0, 4.0))
+print(p)
+Collection(a=Object(x=1.0, y=2.0), b=Object(x=3.0, y=4.0))
+
+replace(p, {"a": {"x": 5.0}, "b": {"y": 6.0}})
+# Collection(a=Object(x=5.0, y=2.0), b=Object(x=3.0, y=6.0))
+```
+
+With `replace` this remains a one-liner. Replace pieces of any structure,
+regardless of nesting.
+
+To disambiguate dictionary fields from nested structures, use the `F` marker.
+
+```python
+from dataclassish import F
+
+replace(p, {"a": {"x": F({"thing": 5.0})}})
+# Collection(a=Object(x={'thing': 5.0}, y=2.0),
+#            b=Object(x=3.0, y=4.0))
+```
+
 ## Citation
 
 [![DOI][zenodo-badge]][zenodo-link]
@@ -130,17 +194,11 @@ If you found this library to be useful in academic work, then please cite.
 
 We welcome contributions!
 
-<!-- [![GitHub Discussion][github-discussions-badge]][github-discussions-link] -->
-
-<!-- SPHINX-START -->
-
 <!-- prettier-ignore-start -->
 [actions-badge]:            https://github.com/GalacticDynamics/dataclassish/workflows/CI/badge.svg
 [actions-link]:             https://github.com/GalacticDynamics/dataclassish/actions
 [conda-badge]:              https://img.shields.io/conda/vn/conda-forge/dataclassish
 [conda-link]:               https://github.com/conda-forge/dataclassish-feedstock
-<!-- [github-discussions-badge]: https://img.shields.io/static/v1?label=Discussions&message=Ask&color=blue&logo=github
-[github-discussions-link]:  https://github.com/GalacticDynamics/dataclassish/discussions -->
 [pypi-link]:                https://pypi.org/project/dataclassish/
 [pypi-platforms]:           https://img.shields.io/pypi/pyversions/dataclassish
 [pypi-version]:             https://img.shields.io/pypi/v/dataclassish
@@ -148,5 +206,8 @@ We welcome contributions!
 [rtd-link]:                 https://dataclassish.readthedocs.io/en/latest/?badge=latest
 [zenodo-badge]:             https://zenodo.org/badge/755708966.svg
 [zenodo-link]:              https://zenodo.org/doi/10.5281/zenodo.10850557
+
+[dataclasses-link]: https://docs.python.org/3/library/dataclasses.html
+[dict-link]: https://docs.python.org/3.8/library/stdtypes.html#dict
 
 <!-- prettier-ignore-end -->
