@@ -186,7 +186,8 @@ replace(p, {"a": {"x": F({"thing": 5.0})}})
 
 [![DOI][zenodo-badge]][zenodo-link]
 
-If you found this library to be useful in academic work, then please cite.
+If you enjoyed using this library and would like to cite the software you use
+then click the link above.
 
 ## Development
 
@@ -204,8 +205,9 @@ We welcome contributions!
 [pypi-version]:             https://img.shields.io/pypi/v/dataclassish
 [rtd-badge]:                https://readthedocs.org/projects/dataclassish/badge/?version=latest
 [rtd-link]:                 https://dataclassish.readthedocs.io/en/latest/?badge=latest
-[zenodo-badge]:             https://zenodo.org/badge/755708966.svg
-[zenodo-link]:              https://zenodo.org/doi/10.5281/zenodo.10850557
+[zenodo-badge]:             https://zenodo.org/badge/829828449.svg
+[zenodo-link]:              https://zenodo.org/doi/10.5281/zenodo.13357978
+
 
 [dataclasses-link]: https://docs.python.org/3/library/dataclasses.html
 [dict-link]: https://docs.python.org/3.8/library/stdtypes.html#dict
