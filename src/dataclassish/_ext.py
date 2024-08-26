@@ -2,7 +2,7 @@
 
 __all__ = ["field_keys", "field_values", "field_items"]
 
-from collections.abc import Hashable, ItemsView, Iterator, KeysView, Mapping, ValuesView
+from collections.abc import Hashable, ItemsView, KeysView, Mapping, ValuesView
 from typing import Any, TypeVar
 
 from plum import dispatch
@@ -12,12 +12,13 @@ from ._core import fields
 K = TypeVar("K")
 V = TypeVar("V")
 
+
 # ===================================================================
 # Field keys
 
 
 @dispatch
-def field_keys(obj: Any, /) -> Iterator[str]:
+def field_keys(obj: Any, /) -> tuple[str, ...]:
     """Yield the field names from the `dataclassish.fields`.
 
     Examples
@@ -31,15 +32,14 @@ def field_keys(obj: Any, /) -> Iterator[str]:
     ...     y: float
 
     >>> p = Point(1.0, 2.0)
-    >>> list(field_keys(p))
-    ['x', 'y']
+    >>> field_keys(p)
+    ('x', 'y')
 
     """
-    yield from (f.name for f in fields(obj))
+    return tuple(f.name for f in fields(obj))
 
 
 @dispatch  # type: ignore[no-redef]
-# TODO: def field_keys(obj: Mapping[K, V]) -> Iterator[K]:
 def field_keys(obj: Mapping[Hashable, Any]) -> KeysView[Hashable]:
     """Return the keys of a mapping.
 
@@ -60,8 +60,8 @@ def field_keys(obj: Mapping[Hashable, Any]) -> KeysView[Hashable]:
 
 
 @dispatch
-def field_values(obj: Any, /) -> Iterator[Any]:
-    """Yield the field values from the `dataclassish.fields`.
+def field_values(obj: Any, /) -> tuple[Any, ...]:
+    """Return the field values from the `dataclassish.fields`.
 
     Examples
     --------
@@ -74,15 +74,14 @@ def field_values(obj: Any, /) -> Iterator[Any]:
     ...     y: float
 
     >>> p = Point(1.0, 2.0)
-    >>> list(field_values(p))
-    [1.0, 2.0]
+    >>> field_values(p)
+    (1.0, 2.0)
 
     """
-    yield from (getattr(obj, f.name) for f in fields(obj))
+    return tuple(getattr(obj, f.name) for f in fields(obj))
 
 
 @dispatch  # type: ignore[no-redef]
-# TODO: def field_values(obj: Mapping[Any, V]) -> Iterator[V]:
 def field_values(obj: Mapping[Any, Any]) -> ValuesView[Any]:
     """Return the values of a mapping.
 
@@ -103,8 +102,8 @@ def field_values(obj: Mapping[Any, Any]) -> ValuesView[Any]:
 
 
 @dispatch
-def field_items(obj: Any) -> Iterator[tuple[str, Any]]:
-    """Yield the field names and values from the `dataclassish.fields`.
+def field_items(obj: Any) -> tuple[tuple[str, Any], ...]:
+    """Return the field names and values from the `dataclassish.fields`.
 
     Examples
     --------
@@ -117,15 +116,14 @@ def field_items(obj: Any) -> Iterator[tuple[str, Any]]:
     ...     y: float
 
     >>> p = Point(1.0, 2.0)
-    >>> list(field_items(p))
-    [('x', 1.0), ('y', 2.0)]
+    >>> field_items(p)
+    (('x', 1.0), ('y', 2.0))
 
     """
-    yield from ((f.name, getattr(obj, f.name)) for f in fields(obj))
+    return tuple((f.name, getattr(obj, f.name)) for f in fields(obj))
 
 
 @dispatch  # type: ignore[no-redef]
-# TODO: def field_items(obj: Mapping[K, V]) -> Iterator[tuple[K, V]]:
 def field_items(obj: Mapping[Any, Any]) -> ItemsView[Any, Any]:
     """Return the items of a mapping.
 
