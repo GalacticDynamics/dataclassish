@@ -3,7 +3,7 @@
 While `dataclasses.field` itself does not allow for converters (See PEP 712)
 many dataclasses-like libraries do. A very short, very non-exhaustive list
 includes: ``attrs`` and ``equinox``. This module provides a few useful converter
-functions. If you need more powerful converters should check out ``attrs``!
+functions. If you need more, check out ``attrs``!
 
 A quick rant of why rejecting PEP 712 was a bad idea. A core design guideline
 for Python is Postel's Law: "be conservative in what you send, be liberal in
@@ -25,9 +25,7 @@ __all__ = ["AbstractConverter", "optional", "ifnotisinstance"]
 import dataclasses
 from abc import ABCMeta, abstractmethod
 from collections.abc import Callable
-from typing import Any, Generic, TypeVar, Unpack, overload
-
-from typing_extensions import TypeVarTuple
+from typing import Any, Generic, TypeVar, cast, overload
 
 ArgT = TypeVar("ArgT")  # Input type
 RetT = TypeVar("RetT")  # Return type
@@ -49,7 +47,7 @@ class AbstractConverter(Generic[ArgT, RetT], metaclass=ABCMeta):
 
 
 @dataclasses.dataclass(frozen=True, slots=True, eq=False)
-class optional(AbstractConverter[ArgT, RetT]):
+class optional(AbstractConverter[ArgT, RetT]):  # noqa: N801
     """Optional converter with a defined sentinel value.
 
     This converter allows for a field to be optional, i.e., it can be set to
@@ -63,7 +61,7 @@ class optional(AbstractConverter[ArgT, RetT]):
 
     Examples
     --------
-    For this example we will use ``equinox`` as the dataclass library, but this
+    For this example we will use ``attrs`` as the dataclass library, but this
     converter can be used with any dataclass-like library that supports
     converters.
 
@@ -100,12 +98,12 @@ class optional(AbstractConverter[ArgT, RetT]):
 
 # -------------------------------------------------------------------
 
-PassThroughTs = TypeVarTuple("PassThroughTs")
+PassThroughTs = TypeVar("PassThroughTs")
 
 
 @dataclasses.dataclass(frozen=True, slots=True, eq=False)
-class ifnotisinstance(
-    AbstractConverter[ArgT, RetT], Generic[ArgT, RetT, *PassThroughTs]
+class ifnotisinstance(  # noqa: N801
+    AbstractConverter[ArgT, RetT], Generic[ArgT, PassThroughTs, RetT]
 ):
     """Converter that is applied if the argument is NOT a specified type.
 
@@ -114,7 +112,7 @@ class ifnotisinstance(
 
     Examples
     --------
-    For this example we will use ``equinox`` as the dataclass library, but this
+    For this example we will use ``attrs`` as the dataclass library, but this
     converter can be used with any dataclass-like library that supports
     converters.
 
@@ -123,7 +121,7 @@ class ifnotisinstance(
 
     >>> @define
     ... class Class:
-    ...     a: float | int = field(converter=ifnotisinstance(int, converter=float))
+    ...     a: float | int = field(converter=ifnotisinstance((int,), converter=float))
 
     >>> obj = Class(1)
     >>> obj.a
@@ -135,7 +133,7 @@ class ifnotisinstance(
 
     """
 
-    pass_types: tuple[type[Unpack[PassThroughTs]]]
+    pass_types: type[PassThroughTs]
     """The types to pass through without conversion."""
 
     converter: Callable[[ArgT], RetT]
@@ -145,8 +143,12 @@ class ifnotisinstance(
     def __call__(self, value: ArgT, /) -> RetT: ...
 
     @overload
-    def __call__(self, value: Unpack[PassThroughTs], /) -> Unpack[PassThroughTs]: ...
+    def __call__(self, value: PassThroughTs, /) -> PassThroughTs: ...
 
-    def __call__(self, value: ArgT, /) -> RetT | Unpack[PassThroughTs]:
+    def __call__(self, value: ArgT | PassThroughTs, /) -> RetT | PassThroughTs:
         """Pass through the input value."""
-        return value if isinstance(value, self.pass_types) else self.converter(value)
+        return (
+            value
+            if isinstance(value, self.pass_types)
+            else self.converter(cast(ArgT, value))
+        )
