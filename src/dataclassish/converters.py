@@ -22,7 +22,7 @@ rejection of PEP 712 directly contradicts a core design principle of Python.
 # ruff:noqa: N801
 # pylint: disable=C0103
 
-__all__ = ["AbstractConverter", "optional", "ifnotisinstance"]
+__all__ = ["AbstractConverter", "Optional", "Unless"]
 
 import dataclasses
 from abc import ABCMeta, abstractmethod
@@ -49,7 +49,7 @@ class AbstractConverter(Generic[ArgT, RetT], metaclass=ABCMeta):
 
 
 @dataclasses.dataclass(frozen=True, slots=True, eq=False)
-class optional(AbstractConverter[ArgT, RetT]):
+class Optional(AbstractConverter[ArgT, RetT]):
     """Optional converter with a defined sentinel value.
 
     This converter allows for a field to be optional, i.e., it can be set to
@@ -68,11 +68,11 @@ class optional(AbstractConverter[ArgT, RetT]):
     converters.
 
     >>> from attrs import define, field
-    >>> from dataclassish.converters import optional
+    >>> from dataclassish.converters import Optional
 
     >>> @define
     ... class Class:
-    ...     a: int | None = field(default=None, converter=optional(int))
+    ...     a: int | None = field(default=None, converter=Optional(int))
 
     >>> obj = Class()
     >>> obj.a
@@ -104,9 +104,7 @@ PassThroughTs = TypeVar("PassThroughTs")
 
 
 @dataclasses.dataclass(frozen=True, slots=True, eq=False)
-class ifnotisinstance(
-    AbstractConverter[ArgT, RetT], Generic[ArgT, PassThroughTs, RetT]
-):
+class Unless(AbstractConverter[ArgT, RetT], Generic[ArgT, PassThroughTs, RetT]):
     """Converter that is applied if the argument is NOT a specified type.
 
     This converter is useful when you want to pass through a value if it is of a
@@ -119,11 +117,11 @@ class ifnotisinstance(
     converters.
 
     >>> from attrs import define, field
-    >>> from dataclassish.converters import ifnotisinstance
+    >>> from dataclassish.converters import Unless
 
     >>> @define
     ... class Class:
-    ...     a: float | int = field(converter=ifnotisinstance(int, converter=float))
+    ...     a: float | int = field(converter=Unless(int, converter=float))
 
     >>> obj = Class(1)
     >>> obj.a
@@ -135,7 +133,7 @@ class ifnotisinstance(
 
     """
 
-    pass_types: type[PassThroughTs] | tuple[type[PassThroughTs], ...]
+    unconverted_types: type[PassThroughTs] | tuple[type[PassThroughTs], ...]
     """The types to pass through without conversion."""
 
     converter: Callable[[ArgT], RetT]
@@ -151,6 +149,6 @@ class ifnotisinstance(
         """Pass through the input value."""
         return (
             cast(PassThroughTs, value)
-            if isinstance(value, self.pass_types)
+            if isinstance(value, self.unconverted_types)
             else self.converter(cast(ArgT, value))
         )
