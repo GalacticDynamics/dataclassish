@@ -42,7 +42,7 @@ class AbstractConverter(Generic[ArgT, RetT], metaclass=ABCMeta):
     @abstractmethod
     def __call__(self, value: ArgT, /) -> Any:
         """Convert the input value to the desired output type."""
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 # -------------------------------------------------------------------
