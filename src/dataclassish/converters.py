@@ -72,14 +72,14 @@ class Optional(AbstractConverter[ArgT, RetT]):
 
     >>> @define
     ... class Class:
-    ...     a: int | None = field(default=None, converter=Optional(int))
+    ...     attr: int | None = field(default=None, converter=Optional(int))
 
     >>> obj = Class()
-    >>> obj.a
+    >>> print(obj.attr)
     None
 
-    >>> obj = Class(a=1)
-    >>> obj.a
+    >>> obj = Class(1)
+    >>> obj.attr
     1
 
     """
@@ -121,14 +121,14 @@ class Unless(AbstractConverter[ArgT, RetT], Generic[ArgT, PassThroughTs, RetT]):
 
     >>> @define
     ... class Class:
-    ...     a: float | int = field(converter=Unless(int, converter=float))
+    ...     attr: float | int = field(converter=Unless(int, converter=float))
 
     >>> obj = Class(1)
-    >>> obj.a
+    >>> obj.attr
     1
 
     >>> obj = Class("1")
-    >>> obj.a
+    >>> obj.attr
     1.0
 
     """
