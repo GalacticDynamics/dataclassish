@@ -37,9 +37,9 @@ WIP. But if you've worked with a
 [`dataclass`](https://docs.python.org/3/library/dataclasses.html) then you
 basically already know everything you need to know.
 
-## Quick example
+### Getting Started
 
-In this Example we'll show how `dataclassish` works exactly the same as
+In this example we'll show how `dataclassish` works exactly the same as
 [`dataclasses`][dataclasses-link] when working with a `@dataclass` object.
 
 ```python
@@ -118,6 +118,8 @@ print(obj2)
 # MyClass(a=1,b=2,c=4.0)
 ```
 
+### Adding a Second Argument
+
 `replace` can also accept a second positional argument which is a dictionary
 specifying a nested replacement. For example consider the following dict:
 
@@ -180,6 +182,84 @@ from dataclassish import F
 replace(p, {"a": {"x": F({"thing": 5.0})}})
 # Collection(a=Object(x={'thing': 5.0}, y=2.0),
 #            b=Object(x=3.0, y=4.0))
+```
+
+### dataclass tools
+
+[`dataclasses`][dataclasses-link] has a number of utility functions beyond
+`replace`: `fields`, `asdict`, and `astuple`. `dataclassish` supports of all
+these functions.
+
+```python
+from dataclassish import fields, asdict, astuple
+
+p = Point(1.0, 2.0)
+
+print(fields(p))
+# (Field(name='x',...), Field(name='y',...))
+
+print(asdict(p))
+# {'x': 1.0, 'y': 2.0}
+
+print(astuple(p))
+# (1.0, 2.0)
+```
+
+`dataclassish` extends these functions to [`dict`][dict-link]'s:
+
+```python
+p = {"x": 1, "y": 2.0}
+
+print(fields(p))
+# (Field(name='x',...), Field(name='y',...))
+
+print(asdict(p))
+# {'x': 1.0, 'y': 2.0}
+
+print(astuple(p))
+# (1.0, 2.0)
+```
+
+Support for custom objects can be implemented similarly to `replace`.
+
+### converters
+
+While `dataclasses.field` itself does not allow for converters (See PEP 712)
+many dataclasses-like libraries do. A very short, very non-exhaustive list
+includes: `attrs` and `equinox`. The module `dataclassish.converters` provides a
+few useful converter functions. If you need more, check out `attrs`!
+
+```python
+from attrs import define, field
+from dataclassish.converters import optional, ifnotisinstance
+
+
+@define
+class Class1:
+    attr: int | None = field(default=None, converter=optional(int))
+
+
+obj = Class1()
+print(obj.attr)
+# None
+
+obj = Class1(a=1)
+print(obj.attr)
+# 1
+
+
+@define
+class Class2:
+    attr: float | int = field(converter=ifnotisinstance((int,), converter=float))
+
+
+obj = Class2(1)
+print(obj.attr)
+# 1
+
+obj = Class2("1")
+print(obj.attr)
+# 1.0
 ```
 
 ## Citation

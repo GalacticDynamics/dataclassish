@@ -321,6 +321,7 @@ def asdict(
 def astuple(
     obj: DataclassInstance,
     /,
+    *,
     tuple_factory: Callable[[Any], tuple[Any, ...]] = tuple,
 ) -> tuple[Any, ...]:
     """Return the fields of a dataclass instance as a tuple.
@@ -347,6 +348,7 @@ def astuple(
 def astuple(
     obj: Mapping[str, Any],
     /,
+    *,
     tuple_factory: Callable[[Any], tuple[Any, ...]] = tuple,
 ) -> tuple[Any, ...]:
     """Return the fields of a mapping as a tuple.
