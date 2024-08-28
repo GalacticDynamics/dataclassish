@@ -72,7 +72,7 @@ class optional(AbstractConverter[ArgT, RetT]):
 
     >>> @define
     ... class Class:
-    ...     a: int | None = field(default=None, converter=optional(int)
+    ...     a: int | None = field(default=None, converter=optional(int))
 
     >>> obj = Class()
     >>> obj.a
