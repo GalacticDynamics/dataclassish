@@ -133,7 +133,7 @@ class ifnotisinstance(  # noqa: N801
 
     """
 
-    pass_types: type[PassThroughTs]
+    pass_types: type[PassThroughTs] | tuple[type[PassThroughTs], ...]
     """The types to pass through without conversion."""
 
     converter: Callable[[ArgT], RetT]
@@ -148,7 +148,7 @@ class ifnotisinstance(  # noqa: N801
     def __call__(self, value: ArgT | PassThroughTs, /) -> RetT | PassThroughTs:
         """Pass through the input value."""
         return (
-            value
+            cast(PassThroughTs, value)
             if isinstance(value, self.pass_types)
             else self.converter(cast(ArgT, value))
         )
