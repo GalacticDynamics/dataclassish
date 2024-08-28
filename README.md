@@ -231,12 +231,12 @@ few useful converter functions. If you need more, check out `attrs`!
 
 ```python
 from attrs import define, field
-from dataclassish.converters import optional, ifnotisinstance
+from dataclassish.converters import Optional, Unless
 
 
 @define
 class Class1:
-    attr: int | None = field(default=None, converter=optional(int))
+    attr: int | None = field(default=None, converter=Optional(int))
 
 
 obj = Class1()
@@ -250,7 +250,7 @@ print(obj.attr)
 
 @define
 class Class2:
-    attr: float | int = field(converter=ifnotisinstance((int,), converter=float))
+    attr: float | int = field(converter=Unless(int, converter=float))
 
 
 obj = Class2(1)

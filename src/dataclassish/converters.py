@@ -5,19 +5,6 @@ many dataclasses-like libraries do. A very short, very non-exhaustive list
 includes: ``attrs`` and ``equinox``. This module provides a few useful converter
 functions. If you need more, check out ``attrs``!
 
-A quick rant of why rejecting PEP 712 was a bad idea. A core design guideline
-for Python is Postel's Law: "be conservative in what you send, be liberal in
-what you accept" (https://en.wikipedia.org/wiki/Robustness_principle). Currently
-dataclasses are conservative in what they "send" (i.e., the types of their
-attributes when accessed from an instance of a dataclass). The problem is that
-without converters dataclasses are ALSO conservative in what they "accept" (how
-they can be initialized), since they require that the types of the attributes
-match the types of the fields. The onus of data structuring is forced on the
-user. This is a violation of Postel's Law. Without PEP 712's converter support
-the only way to be liberal in the what dataclasses accept is to write a custom
-``__init__`` method, in which case why are we even using a dataclass?! The
-rejection of PEP 712 directly contradicts a core design principle of Python.
-
 """
 # ruff:noqa: N801
 # pylint: disable=C0103
