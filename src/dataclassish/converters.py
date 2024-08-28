@@ -121,7 +121,7 @@ class ifnotisinstance(  # noqa: N801
 
     >>> @define
     ... class Class:
-    ...     a: float | int = field(converter=ifnotisinstance((int,), converter=float))
+    ...     a: float | int = field(converter=ifnotisinstance(int, converter=float))
 
     >>> obj = Class(1)
     >>> obj.a
