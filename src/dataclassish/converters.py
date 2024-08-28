@@ -19,6 +19,8 @@ the only way to be liberal in the what dataclasses accept is to write a custom
 rejection of PEP 712 directly contradicts a core design principle of Python.
 
 """
+# ruff:noqa: N801
+# pylint: disable=C0103
 
 __all__ = ["AbstractConverter", "optional", "ifnotisinstance"]
 
@@ -47,7 +49,7 @@ class AbstractConverter(Generic[ArgT, RetT], metaclass=ABCMeta):
 
 
 @dataclasses.dataclass(frozen=True, slots=True, eq=False)
-class optional(AbstractConverter[ArgT, RetT]):  # noqa: N801
+class optional(AbstractConverter[ArgT, RetT]):
     """Optional converter with a defined sentinel value.
 
     This converter allows for a field to be optional, i.e., it can be set to
@@ -102,7 +104,7 @@ PassThroughTs = TypeVar("PassThroughTs")
 
 
 @dataclasses.dataclass(frozen=True, slots=True, eq=False)
-class ifnotisinstance(  # noqa: N801
+class ifnotisinstance(
     AbstractConverter[ArgT, RetT], Generic[ArgT, PassThroughTs, RetT]
 ):
     """Converter that is applied if the argument is NOT a specified type.
