@@ -1,5 +1,5 @@
 <h1 align='center'> dataclassish </h1>
-<h2 align="center">Tools from <code>dataclasses</code>, extended to all of Python</h2>
+<h3 align="center">Tools from <code>dataclasses</code>, extended to all of Python</h3>
 
 Python's [`dataclasses`][dataclasses-link] provides tools for working with
 objects, but only compatible `@dataclass` objects. 😢 </br> This repository is a
@@ -237,13 +237,14 @@ from dataclassish.converters import Optional, Unless
 @define
 class Class1:
     attr: int | None = field(default=None, converter=Optional(int))
+    """attr is converted to an int or kept as None."""
 
 
 obj = Class1()
 print(obj.attr)
 # None
 
-obj = Class1(a=1)
+obj = Class1(a=1.0)
 print(obj.attr)
 # 1
 
@@ -251,6 +252,7 @@ print(obj.attr)
 @define
 class Class2:
     attr: float | int = field(converter=Unless(int, converter=float))
+    """attr is converted to a float, unless it's an int."""
 
 
 obj = Class2(1)
