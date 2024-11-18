@@ -2,7 +2,7 @@
 
 __all__ = ["FlagConstructionError", "AbstractFlag"]
 
-from typing import Any
+from typing import Any, final
 
 
 class FlagConstructionError(Exception):
@@ -36,5 +36,6 @@ class AbstractFlag:
         raise FlagConstructionError(cls.__name__)
 
 
+@final
 class NoFlag(AbstractFlag):
     """No flag."""
