@@ -23,8 +23,6 @@ print(d2)
 [![PyPI platforms][pypi-platforms]][pypi-link]
 [![PyPI version][pypi-version]][pypi-link]
 
-<!-- [![Conda-Forge][conda-badge]][conda-link] -->
-
 ```bash
 pip install dataclassish
 ```
@@ -280,14 +278,12 @@ We welcome contributions!
 <!-- prettier-ignore-start -->
 [actions-badge]:            https://github.com/GalacticDynamics/dataclassish/workflows/CI/badge.svg
 [actions-link]:             https://github.com/GalacticDynamics/dataclassish/actions
-[conda-badge]:              https://img.shields.io/conda/vn/conda-forge/dataclassish
-[conda-link]:               https://github.com/conda-forge/dataclassish-feedstock
 [pypi-link]:                https://pypi.org/project/dataclassish/
 [pypi-platforms]:           https://img.shields.io/pypi/pyversions/dataclassish
 [pypi-version]:             https://img.shields.io/pypi/v/dataclassish
 [rtd-badge]:                https://readthedocs.org/projects/dataclassish/badge/?version=latest
 [rtd-link]:                 https://dataclassish.readthedocs.io/en/latest/?badge=latest
-[zenodo-badge]:             https://zenodo.org/badge/829828449.svg
+[zenodo-badge]:             https://zenodo.org/badge/13388518.svg
 [zenodo-link]:              https://zenodo.org/doi/10.5281/zenodo.13357978
 
 
