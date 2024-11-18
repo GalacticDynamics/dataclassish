@@ -1,8 +1,3 @@
-[build-system]
-requires = ["hatchling", "hatch-vcs"]
-build-backend = "hatchling.build"
-
-
 [project]
 name = "dataclassish"
 authors = [
@@ -33,15 +28,6 @@ dependencies = [
   "typing_extensions",
 ]
 
-[project.optional-dependencies]
-test = [
-  "attrs",
-  "pytest >=6",
-  "pytest-cov >=3",
-  "sybil",
-]
-dev = ["dataclassish[test]"]
-
 [project.urls]
 Homepage = "https://github.com/GalacticDynamics/dataclassish"
 "Bug Tracker" = "https://github.com/GalacticDynamics/dataclassish/issues"
@@ -49,13 +35,24 @@ Discussions = "https://github.com/GalacticDynamics/dataclassish/discussions"
 Changelog = "https://github.com/GalacticDynamics/dataclassish/releases"
 
 
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+  { "include-group" = "test" },
+]
+test = [
+  "attrs",
+  "pytest >=6",
+  "pytest-cov >=3",
+  "sybil",
+]
+
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/dataclassish/_version.py"
-
-[tool.hatch.envs.default]
-features = ["test"]
-scripts.test = "pytest {args}"
 
 
 [tool.pytest.ini_options]
