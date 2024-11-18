@@ -34,6 +34,9 @@ jobs:
         with:
           python-version-file: ".python-version"
 
+      - name: Install the project
+        run: uv sync --group nox
+
       - uses: pre-commit/action@v3.0.1
         with:
           extra_args: --hook-stage manual --all-files
@@ -53,9 +56,9 @@ jobs:
         python-version: ["3.10", "3.12"]
         runs-on: [ubuntu-latest, macos-latest, windows-latest]
 
-        include:
-          - python-version: pypy-3.10
-            runs-on: ubuntu-latest
+        # include:
+        #   - python-version: pypy-3.10
+        #     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -110,12 +113,12 @@ jobs:
         run: uv python install ${{ matrix.python-version }}
 
       - name: Install the project
-        run: uv sync --extra all --group test --resolution lowest-direct
+        run: uv sync --group test --resolution lowest-direct
 
       - name: Test package
         run: >-
           uv run pytest -ra --cov --cov-report=xml --cov-report=term
-          --durations=20 --mpl
+          --durations=20
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v4.6.0

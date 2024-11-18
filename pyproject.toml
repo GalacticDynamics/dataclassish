@@ -25,7 +25,7 @@ classifiers = [
 dynamic = ["version"]
 dependencies = [
   "plum-dispatch>=2.5.1",
-  "typing_extensions",
+  "typing_extensions>=4.12.2",
 ]
 
 [project.urls]
@@ -41,8 +41,10 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+  { "include-group" = "nox" },
   { "include-group" = "test" },
 ]
+nox = ["nox"]
 test = [
   "attrs",
   "pytest >=6",
