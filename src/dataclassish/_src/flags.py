@@ -23,6 +23,13 @@ class AbstractFlag:
     FlagConstructionError
         If an attempt is made to instantiate a unit system flag class.
 
+    Examples
+    --------
+    >>> from dataclassish.flags import AbstractFlag
+    >>> try: AbstractFlag()
+    ... except FlagConstructionError as e: print(e)
+    AbstractFlag flag cannot be constructed.
+
     """
 
     def __new__(cls, *_: Any, **__: Any) -> None:  # type: ignore[misc]
