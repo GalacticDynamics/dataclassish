@@ -115,7 +115,7 @@ toml = [
 
 [[package]]
 name = "dataclassish"
-version = "0.3.2.dev10+g435a5aa.d20241118"
+version = "0.3.2.dev5+gacc4eea.d20241118"
 source = { editable = "." }
 dependencies = [
     { name = "plum-dispatch" },
@@ -143,7 +143,7 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "plum-dispatch", specifier = ">=2.5.1" },
-    { name = "typing-extensions" },
+    { name = "typing-extensions", specifier = ">=4.12.2" },
 ]
 
 [package.metadata.requires-dev]
