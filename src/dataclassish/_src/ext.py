@@ -7,7 +7,7 @@ from typing import Any, TypeVar
 
 from plum import dispatch
 
-from ._core import fields
+from .core import fields
 
 K = TypeVar("K")
 V = TypeVar("V")
