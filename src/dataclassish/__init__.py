@@ -4,9 +4,9 @@ dataclassish: dataclass tools, extended by multiple dispatch
 """
 
 from . import converters, flags
-from ._src.core import F, asdict, astuple, fields, replace
+from ._src.core import asdict, astuple, fields, replace
 from ._src.ext import field_items, field_keys, field_values
-from ._src.types import DataclassInstance
+from ._src.types import DataclassInstance, F
 from ._version import version as __version__
 
 __all__ = [

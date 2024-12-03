@@ -1,53 +1,21 @@
 """Core module for ``dataclassish``."""
 
-__all__ = ["replace", "fields", "asdict", "astuple", "F"]
+__all__ = ["replace", "fields", "asdict", "astuple"]
 
 from collections.abc import Callable, Hashable, Mapping
 from dataclasses import (
     Field,
     asdict as _dataclass_asdict,
     astuple as _dataclass_astuple,
-    dataclass,
     field,
     fields as _dataclass_fields,
     replace as _dataclass_replace,
 )
-from typing import Any, Generic, TypeVar
+from typing import Any
 
 from plum import dispatch
 
-from .types import DataclassInstance
-
-V = TypeVar("V")
-
-
-@dataclass(frozen=True, slots=True)
-class F(Generic[V]):
-    """Mark a field as a dataclass field when doing multi-level replacement.
-
-    Examples
-    --------
-    >>> from dataclassish import F
-
-    >>> F(1)
-    F(value=1)
-
-    >>> p = {"a": 1, "b": 2.0, "c": {"aa": 3, "bb": 4}}
-    >>> replace(p, {"c": {"aa": 6}})
-    {'a': 1, 'b': 2.0, 'c': {'aa': 6, 'bb': 4}}
-
-    >>> from plum import NotFoundLookupError
-    >>> try: replace(p, {"c": {"aa": 6, "bb": {"d": 7}}})
-    ... except NotFoundLookupError as e: print(e)
-    `replace(4, {'d': 7})` could not be resolved...
-
-    >>> replace(p, {"c": F({"aa": 6, "bb": {"d": 7}})})
-    {'a': 1, 'b': 2.0, 'c': {'aa': 6, 'bb': {'d': 7}}}
-
-    """
-
-    value: V
-
+from .types import DataclassInstance, F
 
 # ===================================================================
 # Replace
