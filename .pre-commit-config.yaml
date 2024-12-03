@@ -4,6 +4,16 @@ ci:
   autoupdate_schedule: "quarterly"
 
 repos:
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.0.0
+    hooks:
+      - id: commitizen
+        additional_dependencies: [cz-conventional-gitmoji]
+
+  - repo: meta
+    hooks:
+      - id: check-useless-excludes
+
   - repo: https://github.com/adamchainz/blacken-docs
     rev: "1.19.1"
     hooks:
@@ -23,7 +33,6 @@ repos:
       - id: mixed-line-ending
       - id: name-tests-test
         args: ["--pytest-test-first"]
-      - id: requirements-txt-fixer
       - id: trailing-whitespace
 
   - repo: https://github.com/pre-commit/mirrors-prettier

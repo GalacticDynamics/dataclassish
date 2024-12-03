@@ -41,10 +41,11 @@ build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
+  "cz-conventional-gitmoji>=0.6.1",
   { "include-group" = "nox" },
   { "include-group" = "test" },
 ]
-nox = ["nox"]
+nox = ["nox>=2024.10.9"]
 test = [
   "attrs",
   "pytest >=6",
@@ -55,6 +56,10 @@ test = [
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/dataclassish/_version.py"
+
+
+[tool.commitizen]
+name = "cz_gitmoji"
 
 
 [tool.pytest.ini_options]
