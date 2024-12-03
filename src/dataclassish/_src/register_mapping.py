@@ -11,6 +11,25 @@ from plum import dispatch
 from .types import F
 
 # ===================================================================
+
+
+@dispatch(precedence=1)  # type: ignore[misc]
+def get_field(obj: Mapping[Hashable, Any], k: Hashable, /) -> Any:
+    """Get a field of a mapping by key.
+
+    Examples
+    --------
+    >>> from dataclassish import get_field
+
+    >>> p = {"a": 1, "b": 2.0, "c": "3"}
+    >>> get_field(p, "a")
+    1
+
+    """
+    return obj[k]
+
+
+# ===================================================================
 # Replace
 
 
@@ -54,7 +73,7 @@ def _recursive_replace_mapping_helper(
     if isinstance(v, F):  # Field, stop here.
         out = v.value
     elif isinstance(v, Mapping):  # more to replace, recurse.
-        out = replace(obj[k], v)
+        out = replace(get_field(obj, k), v)
     else:  # nothing to replace, keep the value.
         out = v
     return out
@@ -81,6 +100,18 @@ def replace(
 
     >>> replace(p, {"c": F({"aa": 6, "bb": {"d": 7}})})
     {'a': 1, 'b': 2.0, 'c': {'aa': 6, 'bb': {'d': 7}}}
+
+    This also works on mixed-type structures, e.g. a dataclass of of dictionaries.
+
+    >>> from dataclasses import dataclass
+    >>> @dataclass
+    ... class Object:
+    ...     a: dict[str, Any]
+    ...     b: dict[str, Any]
+
+    >>> p = Object({"a": 1, "b": 2}, {"c": 3, "d": 4})
+    >>> replace(p, {"a": {"b": 5}, "b": {"c": 6}})
+    Object(a={'a': 1, 'b': 5}, b={'c': 6, 'd': 4})
 
     """
     # Recursively replace the fields

@@ -17,6 +17,31 @@ from plum import dispatch
 from .types import DataclassInstance, F
 
 # ===================================================================
+
+
+@dispatch  # type: ignore[misc]
+def get_field(obj: DataclassInstance, k: str, /) -> Any:
+    """Get a field of a dataclass instance by name.
+
+    Examples
+    --------
+    >>> from dataclasses import dataclass
+    >>> from dataclassish import get_field
+
+    >>> @dataclass
+    ... class Point:
+    ...     x: float
+    ...     y: float
+
+    >>> p = Point(1.0, 2.0)
+    >>> get_field(p, "x")
+    1.0
+
+    """
+    return getattr(obj, k)
+
+
+# ===================================================================
 # Replace
 
 
@@ -51,7 +76,7 @@ def _recursive_replace_dataclass_helper(
     if isinstance(v, F):
         out = v.value
     elif isinstance(v, Mapping):
-        out = replace(getattr(obj, k), v)
+        out = replace(get_field(obj, k), v)
     else:
         out = v
     return out
@@ -86,6 +111,23 @@ def replace(obj: DataclassInstance, fs: Mapping[str, Any], /) -> DataclassInstan
     >>> replace(p, {"a": {"x": F({"thing": 5.0})}})
     PointofPoints(a=Point(x={'thing': 5.0}, y=2.0),
                   b=Point(x=3.0, y=4.0))
+
+    This also works on mixed-type structures, e.g. a dictionary of dataclasses.
+
+    >>> p = {"a": Point(1.0, 2.0), "b": Point(3.0, 4.0)}
+    >>> replace(p, {"a": {"x": 5.0}, "b": {"y": 6.0}})
+    {'a': Point(x=5.0, y=2.0), 'b': Point(x=3.0, y=6.0)}
+
+    Or a dataclass of dictionaries.
+
+    >>> @dataclass
+    ... class Object:
+    ...     a: dict[str, Any]
+    ...     b: dict[str, Any]
+
+    >>> p = Object({"a": 1, "b": 2}, {"c": 3, "d": 4})
+    >>> replace(p, {"a": {"b": 5}, "b": {"c": 6}})
+    Object(a={'a': 1, 'b': 5}, b={'c': 6, 'd': 4})
 
     """
     kwargs = {k: _recursive_replace_dataclass_helper(obj, k, v) for k, v in fs.items()}

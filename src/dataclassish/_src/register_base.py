@@ -11,6 +11,31 @@ from .api import fields
 K = TypeVar("K")
 V = TypeVar("V")
 
+# ===================================================================
+
+
+@dispatch  # type: ignore[misc]
+def get_field(obj: Any, k: str, /) -> Any:
+    """Get a field of an object by name.
+
+    This default implementation is just to call `getattr`.
+
+    Examples
+    --------
+    >>> from dataclassish import get_field
+
+    >>> class Point:
+    ...     def __init__(self, x, y):
+    ...         self.x = x
+    ...         self.y = y
+
+    >>> p = Point(1.0, 2.0)
+    >>> get_field(p, "x")
+    1.0
+
+    """
+    return getattr(obj, k)
+
 
 # ===================================================================
 # Field keys
