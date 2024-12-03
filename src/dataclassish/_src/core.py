@@ -1,6 +1,6 @@
 """Core module for ``dataclassish``."""
 
-__all__ = ["DataclassInstance", "replace", "fields", "asdict", "astuple", "F"]
+__all__ = ["replace", "fields", "asdict", "astuple", "F"]
 
 from collections.abc import Callable, Hashable, Mapping
 from dataclasses import (
@@ -12,25 +12,13 @@ from dataclasses import (
     fields as _dataclass_fields,
     replace as _dataclass_replace,
 )
-from typing import Any, ClassVar, Generic, Protocol, TypeVar, runtime_checkable
+from typing import Any, Generic, TypeVar
 
 from plum import dispatch
 
+from .types import DataclassInstance
+
 V = TypeVar("V")
-
-
-@runtime_checkable
-class DataclassInstance(Protocol):
-    """Protocol for dataclass instances."""
-
-    __dataclass_fields__: ClassVar[dict[str, Any]]
-
-    # B/c of https://github.com/python/mypy/issues/3939 just having
-    # `__dataclass_fields__` is insufficient for `issubclass` checks.
-    @classmethod
-    def __subclasshook__(cls: type, c: type) -> bool:
-        """Customize the subclass check."""
-        return hasattr(c, "__dataclass_fields__")
 
 
 @dataclass(frozen=True, slots=True)
@@ -137,6 +125,9 @@ def replace(obj: DataclassInstance, fs: Mapping[str, Any], /) -> DataclassInstan
     return _dataclass_replace(obj, **kwargs)
 
 
+# -------------------------------------------------------------------
+
+
 @dispatch  # type: ignore[no-redef]
 def replace(obj: Mapping[Hashable, Any], /, **kwargs: Any) -> Mapping[Hashable, Any]:
     """Replace the fields of a mapping.
@@ -168,11 +159,11 @@ def replace(obj: Mapping[Hashable, Any], /, **kwargs: Any) -> Mapping[Hashable, 
 def _recursive_replace_mapping_helper(
     obj: Mapping[Hashable, Any], k: str, v: Any, /
 ) -> Any:
-    if isinstance(v, F):
+    if isinstance(v, F):  # Field, stop here.
         out = v.value
-    elif isinstance(v, Mapping):
+    elif isinstance(v, Mapping):  # more to replace, recurse.
         out = replace(obj[k], v)
-    else:
+    else:  # nothing to replace, keep the value.
         out = v
     return out
 
