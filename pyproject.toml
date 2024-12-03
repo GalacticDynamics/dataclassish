@@ -138,6 +138,7 @@ reports.output-format = "colorized"
 similarities.ignore-imports = "yes"
 messages_control.disable = [
   "design",
+  "duplicate-code",  # too small of a project
   "fixme",
   "function-redefined",  # for plum-dispatch
   "line-too-long",

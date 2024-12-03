@@ -51,7 +51,7 @@ class F(Generic[V]):
 
     Examples
     --------
-    >>> from dataclassish import F
+    >>> from dataclassish import F, replace
 
     >>> F(1)
     F(value=1)
