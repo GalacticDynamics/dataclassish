@@ -1,6 +1,6 @@
 """Core module for ``dataclassish``."""
 
-__all__ = ["DataclassInstance", "replace", "fields", "asdict", "astuple", "F"]
+__all__ = ["replace", "fields", "asdict", "astuple", "F"]
 
 from collections.abc import Callable, Hashable, Mapping
 from dataclasses import (
@@ -12,25 +12,13 @@ from dataclasses import (
     fields as _dataclass_fields,
     replace as _dataclass_replace,
 )
-from typing import Any, ClassVar, Generic, Protocol, TypeVar, runtime_checkable
+from typing import Any, Generic, TypeVar
 
 from plum import dispatch
 
+from .types import DataclassInstance
+
 V = TypeVar("V")
-
-
-@runtime_checkable
-class DataclassInstance(Protocol):
-    """Protocol for dataclass instances."""
-
-    __dataclass_fields__: ClassVar[dict[str, Any]]
-
-    # B/c of https://github.com/python/mypy/issues/3939 just having
-    # `__dataclass_fields__` is insufficient for `issubclass` checks.
-    @classmethod
-    def __subclasshook__(cls: type, c: type) -> bool:
-        """Customize the subclass check."""
-        return hasattr(c, "__dataclass_fields__")
 
 
 @dataclass(frozen=True, slots=True)
@@ -135,6 +123,9 @@ def replace(obj: DataclassInstance, fs: Mapping[str, Any], /) -> DataclassInstan
     """
     kwargs = {k: _recursive_replace_dataclass_helper(obj, k, v) for k, v in fs.items()}
     return _dataclass_replace(obj, **kwargs)
+
+
+# -------------------------------------------------------------------
 
 
 @dispatch  # type: ignore[no-redef]
