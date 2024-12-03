@@ -3,12 +3,6 @@
 dataclassish: dataclass tools, extended by multiple dispatch
 """
 
-from . import converters, flags
-from ._src.core import F, asdict, astuple, fields, replace
-from ._src.ext import field_items, field_keys, field_values
-from ._src.types import DataclassInstance
-from ._version import version as __version__
-
 __all__ = [
     "__version__",
     # Submodules
@@ -26,3 +20,22 @@ __all__ = [
     "field_items",
     "F",
 ]
+
+from . import converters, flags
+from ._src.api import (
+    asdict,
+    astuple,
+    field_items,
+    field_keys,
+    field_values,
+    fields,
+    replace,
+)
+from ._src.types import DataclassInstance, F
+from ._version import version as __version__
+
+# Register dispatches by importing the submodules
+# isort: split
+from ._src import register_base, register_dataclass, register_mapping
+
+del register_base, register_dataclass, register_mapping
