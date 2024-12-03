@@ -1,6 +1,23 @@
 <h1 align='center'> dataclassish </h1>
 <h3 align="center">Tools from <code>dataclasses</code>, extended to all of Python</h3>
 
+<p align="center">
+    <a href="https://pypi.org/project/dataclassish/"> <img alt="PyPI: dataclassish" src="https://img.shields.io/pypi/v/dataclassish?style=flat" /> </a>
+    <a href="https://pypi.org/project/dataclassish/"> <img alt="PyPI versions: dataclassish" src="https://img.shields.io/pypi/pyversions/dataclassish" /> </a>
+    <a href="https://dataclassish.readthedocs.io/en/"> <img alt="ReadTheDocs" src="https://img.shields.io/badge/read_docs-here-orange" /> </a>
+    <a href="https://pypi.org/project/dataclassish/"> <img alt="dataclassish license" src="https://img.shields.io/github/license/GalacticDynamics/dataclassish" /> </a>
+</p>
+<p align="center">
+    <a href="https://github.com/GalacticDynamics/dataclassish/actions"> <img alt="CI status" src="https://github.com/GalacticDynamics/dataclassish/workflows/CI/badge.svg" /> </a>
+    <a href="https://dataclassish.readthedocs.io/en/"> <img alt="ReadTheDocs" src="https://readthedocs.org/projects/dataclassish/badge/?version=latest" /> </a>
+    <a href="https://codecov.io/gh/GalacticDynamics/dataclassish"> <img alt="codecov" src="https://codecov.io/gh/GalacticDynamics/dataclassish/graph/badge.svg" /> </a>
+    <a href="https://scientific-python.org/specs/spec-0000/"> <img alt="ruff" src="https://img.shields.io/badge/SPEC-0-green?labelColor=%23004811&color=%235CA038" /> </a>
+    <a href="https://docs.astral.sh/ruff/"> <img alt="ruff" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json" /> </a>
+    <a href="https://pre-commit.com"> <img alt="pre-commit" src="https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit" /> </a>
+</p>
+
+---
+
 Python's [`dataclasses`][dataclasses-link] provides tools for working with
 objects, but only compatible `@dataclass` objects. 😢 </br> This repository is a
 superset of those tools and extends them to work on ANY Python object you want!
@@ -272,18 +289,31 @@ then click the link above.
 ## Development
 
 [![Actions Status][actions-badge]][actions-link]
+[![Documentation Status][rtd-badge]][rtd-link]
+[![codecov][codecov-badge]][codecov-link]
+[![SPEC 0 — Minimum Supported Dependencies][spec0-badge]][spec0-link]
+[![pre-commit][pre-commit-badge]][pre-commit-link]
+[![ruff][ruff-badge]][ruff-link]
 
 We welcome contributions!
 
 <!-- prettier-ignore-start -->
 [actions-badge]:            https://github.com/GalacticDynamics/dataclassish/workflows/CI/badge.svg
 [actions-link]:             https://github.com/GalacticDynamics/dataclassish/actions
+[codecov-badge]:            https://codecov.io/gh/GalacticDynamics/dataclassish/graph/badge.svg
+[codecov-link]:             https://codecov.io/gh/GalacticDynamics/dataclassish
+[pre-commit-badge]:         https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit
+[pre-commit-link]:          https://pre-commit.com
 [pypi-link]:                https://pypi.org/project/dataclassish/
 [pypi-platforms]:           https://img.shields.io/pypi/pyversions/dataclassish
 [pypi-version]:             https://img.shields.io/pypi/v/dataclassish
 [rtd-badge]:                https://readthedocs.org/projects/dataclassish/badge/?version=latest
 [rtd-link]:                 https://dataclassish.readthedocs.io/en/latest/?badge=latest
-[zenodo-badge]:             https://zenodo.org/badge/13388518.svg
+[ruff-badge]:               https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json
+[ruff-link]:                https://docs.astral.sh/ruff/
+[spec0-badge]:              https://img.shields.io/badge/SPEC-0-green?labelColor=%23004811&color=%235CA038
+[spec0-link]:               https://scientific-python.org/specs/spec-0000/
+[zenodo-badge]:             https://zenodo.org/badge/DOI/10.5281/zenodo.13357978.svg
 [zenodo-link]:              https://zenodo.org/doi/10.5281/zenodo.13357978
 
 
