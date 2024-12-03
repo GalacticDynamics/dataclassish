@@ -159,11 +159,11 @@ def replace(obj: Mapping[Hashable, Any], /, **kwargs: Any) -> Mapping[Hashable, 
 def _recursive_replace_mapping_helper(
     obj: Mapping[Hashable, Any], k: str, v: Any, /
 ) -> Any:
-    if isinstance(v, F):
+    if isinstance(v, F):  # Field, stop here.
         out = v.value
-    elif isinstance(v, Mapping):
+    elif isinstance(v, Mapping):  # more to replace, recurse.
         out = replace(obj[k], v)
-    else:
+    else:  # nothing to replace, keep the value.
         out = v
     return out
 
