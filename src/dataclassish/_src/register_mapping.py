@@ -33,6 +33,12 @@ def replace(obj: Mapping[str, Any], /, **kwargs: Any) -> Mapping[str, Any]:
     >>> replace(p, c=4.0)
     {'a': 1, 'b': 2, 'c': 4.0}
 
+    Extra keys are not allowed:
+
+    >>> try: replace(p, d=5)
+    ... except ValueError as e: print(e)
+    invalid keys {'d'}.
+
     """
     extra_keys = set(kwargs) - set(obj)
     if extra_keys:
