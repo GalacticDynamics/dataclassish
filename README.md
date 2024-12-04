@@ -24,7 +24,7 @@ interface for object manipulation. 🕶️
 
 For example,
 
-```pycon
+```python
 from dataclassish import replace  # New object, replacing select fields
 
 d1 = {"a": 1, "b": 2.0, "c": "3"}
@@ -79,6 +79,7 @@ Point(x=1.0, y=2.0)
 >>> p2 = replace(p, x=3.0)
 >>> p2
 Point(x=3.0, y=2.0)
+
 ```
 
 #### Replacing a `dict`
@@ -104,6 +105,7 @@ objects, but with `dataclassish` it's easy!
 ... except ValueError as e:
 ...     print(e)
 invalid keys {'z'}.
+
 ```
 
 #### Replacing via the `__replace__` Method
@@ -167,6 +169,7 @@ MyClass(a=1,b=2,c=3)
 >>> obj2 = replace(obj, c=4.0)
 >>> obj2
 MyClass(a=1,b=2,c=4.0)
+
 ```
 
 ### Nested Replacement
@@ -177,6 +180,7 @@ Point objects:
 
 ```pycon
 >>> p = {"a": Point(1, 2), "b": Point(3, 4), "c": Point(5, 6)}
+
 ```
 
 With `replace` the nested structure can be updated via:
@@ -184,6 +188,7 @@ With `replace` the nested structure can be updated via:
 ```pycon
 >>> replace(p, {"a": {"x": 1.5}, "b": {"y": 4.5}, "c": {"x": 5.5}})
 {'a': Point(x=1.5, y=2), 'b': Point(x=3, y=4.5), 'c': Point(x=5.5, y=6)}
+
 ```
 
 In contrast in pure Python this would be very challenging. Expand the example
@@ -201,6 +206,7 @@ This is a bad approach, updating the frozen dataclasses in place:
 >>> object.__setattr__(newp["a"], "x", 1.5)
 >>> object.__setattr__(newp["b"], "y", 4.5)
 >>> object.__setattr__(newp["c"], "x", 5.5)
+
 ```
 
 A better way might be to create an entirely new object!
@@ -209,6 +215,7 @@ A better way might be to create an entirely new object!
 >>> newp = {"a": Point(1.5, p["a"].y),
 ...         "b": Point(p["b"].x, 4.5),
 ...         "c": Point(5.5, p["c"].y)}
+
 ```
 
 This isn't so good either.
@@ -242,6 +249,7 @@ Collection(a=Object(x=1.0, y=2.0), b=Object(x=3.0, y=4.0))
 
 >>> replace(p, {"a": {"x": 5.0}, "b": {"y": 6.0}})
 Collection(a=Object(x=5.0, y=2.0), b=Object(x=3.0, y=6.0))
+
 ```
 
 With `replace` this remains a one-liner. Replace pieces of any structure,
@@ -255,6 +263,7 @@ To disambiguate dictionary fields from nested structures, use the `F` marker.
 >>> replace(p, {"a": {"x": F({"thing": 5.0})}})
 Collection(a=Object(x={'thing': 5.0}, y=2.0),
            b=Object(x=3.0, y=4.0))
+
 ```
 
 ### dataclass tools
@@ -276,6 +285,7 @@ these functions.
 
 >>> astuple(p)
 (1.0, 2.0)
+
 ```
 
 `dataclassish` extends these functions to [`dict`][dict-link]'s:
@@ -291,6 +301,7 @@ these functions.
 
 >>> astuple(p)
 (1, 2.0)
+
 ```
 
 Support for custom objects can be implemented similarly to `replace`.
@@ -321,6 +332,7 @@ utilities.
 
 >>> field_items(p)
 (('x', 1.0), ('y', 2.0))
+
 ```
 
 These functions work on any object that has been registered in, not just
@@ -340,6 +352,7 @@ dict_values([1, 2.0])
 
 >>> field_items(p)
 dict_items([('x', 1), ('y', 2.0)])
+
 ```
 
 ### Converters
@@ -380,6 +393,7 @@ None
 >>> obj = Class2("1")
 >>> obj.attr
 1.0
+
 ```
 
 ### Flags
@@ -395,6 +409,7 @@ consideration by the functions in `dataclassish`.
 >>> from dataclassish import flags
 >>> flags.__all__
 ['FlagConstructionError', 'AbstractFlag', 'NoFlag']
+
 ```
 
 Where `AbstractFlag` is the base class for flags, and `NoFlag` is a flag that
@@ -407,6 +422,7 @@ As a quick example, we'll show how to use `NoFlag`.
 >>> from dataclassish import field_keys
 >>> tuple(field_keys(flags.NoFlag, p))
 ('x', 'y')
+
 ```
 
 ## Citation
