@@ -24,7 +24,7 @@ interface for object manipulation. 🕶️
 
 For example,
 
-```{code-block} python
+```pycon
 from dataclassish import replace  # New object, replacing select fields
 
 d1 = {"a": 1, "b": 2.0, "c": "3"}
@@ -62,7 +62,7 @@ pip install dataclassish
 In this example we'll show how `dataclassish` works exactly the same as
 [`dataclasses`][dataclasses-link] when working with a `@dataclass` object.
 
-```{code-block} python
+```pycon
 >>> from dataclassish import replace
 >>> from dataclasses import dataclass
 
@@ -87,7 +87,7 @@ Now we'll work with a [`dict`][dict-link] object. Note that
 [`dataclasses`][dataclasses-link] does _not_ work with [`dict`][dict-link]
 objects, but with `dataclassish` it's easy!
 
-```{code-block} python
+```pycon
 >>> from dataclassish import replace
 
 >>> p = {"x": 1, "y": 2.0}
@@ -113,7 +113,7 @@ In Python 3.13+ objects can implement the `__replace__` method to define how
 `dataclass.replace`, and is a nice generalization to more general Python
 objects. `dataclassish` too supports this method.
 
-```{code-block} python
+```pycon
 >>> class HasReplace:
 ...     def __init__(self, a, b):
 ...         self.a = a
@@ -140,7 +140,7 @@ doesn't have a `__replace__` method (or which we want more control over using a
 second argument, discussed later). Registering in a custom type is very easy!
 Let's make a custom object and define how `replace` will operate on it.
 
-```{code-block} python
+```pycon
 >>> from typing import Any
 >>> from plum import dispatch
 
@@ -175,13 +175,13 @@ MyClass(a=1,b=2,c=4.0)
 specifying a nested replacement. For example consider the following dict of
 Point objects:
 
-```{code-block} python
+```pycon
 >>> p = {"a": Point(1, 2), "b": Point(3, 4), "c": Point(5, 6)}
 ```
 
 With `replace` the nested structure can be updated via:
 
-```{code-block} python
+```pycon
 >>> replace(p, {"a": {"x": 1.5}, "b": {"y": 4.5}, "c": {"x": 5.5}})
 {'a': Point(x=1.5, y=2), 'b': Point(x=3, y=4.5), 'c': Point(x=5.5, y=6)}
 ```
@@ -194,7 +194,7 @@ below to see how this might be done.
 
 This is a bad approach, updating the frozen dataclasses in place:
 
-```{code-block} python
+```pycon
 >>> from copy import deepcopy
 
 >>> newp = deepcopy(p)
@@ -205,7 +205,7 @@ This is a bad approach, updating the frozen dataclasses in place:
 
 A better way might be to create an entirely new object!
 
-```{code-block} python
+```pycon
 >>> newp = {"a": Point(1.5, p["a"].y),
 ...         "b": Point(p["b"].x, 4.5),
 ...         "c": Point(5.5, p["c"].y)}
@@ -223,7 +223,7 @@ Note that we had to use
 [`deepcopy`](https://docs.python.org/3/library/copy.html#copy.deepcopy) to avoid
 mutating the sub-dicts. So what if the objects are immutable?
 
-```{code-block} python
+```pycon
 >>> @dataclass(frozen=True)
 ... class Object:
 ...     x: float | dict
@@ -249,7 +249,7 @@ regardless of nesting.
 
 To disambiguate dictionary fields from nested structures, use the `F` marker.
 
-```{code-block} python
+```pycon
 >>> from dataclassish import F
 
 >>> replace(p, {"a": {"x": F({"thing": 5.0})}})
@@ -263,7 +263,7 @@ Collection(a=Object(x={'thing': 5.0}, y=2.0),
 `replace`: `fields`, `asdict`, and `astuple`. `dataclassish` supports of all
 these functions.
 
-```{code-block} python
+```pycon
 >>> from dataclassish import fields, asdict, astuple
 
 >>> p = Point(1.0, 2.0)
@@ -280,7 +280,7 @@ these functions.
 
 `dataclassish` extends these functions to [`dict`][dict-link]'s:
 
-```{code-block} python
+```pycon
 >>> p = {"x": 1, "y": 2.0}
 
 >>> fields(p)
@@ -305,7 +305,7 @@ utilities.
 - `field_values` returns the values of an object's fields.
 - `field_items` returns the names and values of an object's fields.
 
-```{code-block} python
+```pycon
 >>> from dataclassish import get_field, field_keys, field_values, field_items
 
 >>> p = Point(1.0, 2.0)
@@ -326,7 +326,7 @@ utilities.
 These functions work on any object that has been registered in, not just
 `@dataclass` objects.
 
-```{code-block} python
+```pycon
 >>> p = {"x": 1, "y": 2.0}
 
 >>> get_field(p, "x")
@@ -349,7 +349,7 @@ many dataclasses-like libraries do. A very short, very non-exhaustive list
 includes: `attrs` and `equinox`. The module `dataclassish.converters` provides a
 few useful converter functions. If you need more, check out `attrs`!
 
-```{code-block} python
+```pycon
 >>> from attrs import define, field
 >>> from dataclassish.converters import Optional, Unless
 
@@ -391,7 +391,7 @@ consideration by the functions in `dataclassish`.
 
 `dataclassish` provides a few built-in flags and flag-related utilities.
 
-```{code-block} python
+```pycon
 >>> from dataclassish import flags
 >>> flags.__all__
 ['FlagConstructionError', 'AbstractFlag', 'NoFlag']
@@ -403,7 +403,7 @@ constructed incorrectly.
 
 As a quick example, we'll show how to use `NoFlag`.
 
-```{code-block} python
+```pycon
 >>> from dataclassish import field_keys
 >>> tuple(field_keys(flags.NoFlag, p))
 ('x', 'y')
