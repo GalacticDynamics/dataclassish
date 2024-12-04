@@ -19,6 +19,7 @@ __all__ = [
     "field_items",
     # Classes
     "DataclassInstance",
+    "CanCopyReplace",
     "F",
 ]
 
@@ -33,11 +34,16 @@ from ._src.api import (
     get_field,
     replace,
 )
-from ._src.types import DataclassInstance, F
+from ._src.types import CanCopyReplace, DataclassInstance, F
 from ._version import version as __version__
 
 # Register dispatches by importing the submodules
 # isort: split
-from ._src import register_base, register_dataclass, register_mapping
+from ._src import (
+    register_base,
+    register_copyreplace,
+    register_dataclass,
+    register_mapping,
+)
 
-del register_base, register_dataclass, register_mapping
+del register_base, register_dataclass, register_mapping, register_copyreplace

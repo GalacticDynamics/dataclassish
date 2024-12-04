@@ -8,7 +8,7 @@ from typing import Any
 
 from plum import dispatch
 
-from .types import F
+from .register_base import _recursive_replace_helper
 
 # ===================================================================
 
@@ -33,7 +33,7 @@ def get_field(obj: Mapping[Hashable, Any], k: Hashable, /) -> Any:
 # Replace
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def replace(obj: Mapping[str, Any], /, **kwargs: Any) -> Mapping[str, Any]:
     """Replace the fields of a mapping.
 
@@ -67,19 +67,7 @@ def replace(obj: Mapping[str, Any], /, **kwargs: Any) -> Mapping[str, Any]:
     return type(obj)(**{**obj, **kwargs})
 
 
-def _recursive_replace_mapping_helper(
-    obj: Mapping[Hashable, Any], k: str, v: Any, /
-) -> Any:
-    if isinstance(v, F):  # Field, stop here.
-        out = v.value
-    elif isinstance(v, Mapping):  # more to replace, recurse.
-        out = replace(get_field(obj, k), v)
-    else:  # nothing to replace, keep the value.
-        out = v
-    return out
-
-
-@dispatch  # type: ignore[misc,no-redef]
+@dispatch  # type: ignore[no-redef]
 def replace(
     obj: Mapping[Hashable, Any], fs: Mapping[str, Any], /
 ) -> Mapping[Hashable, Any]:
@@ -115,8 +103,7 @@ def replace(
 
     """
     # Recursively replace the fields
-    kwargs = {k: _recursive_replace_mapping_helper(obj, k, v) for k, v in fs.items()}
-
+    kwargs = {k: _recursive_replace_helper(obj, k, v) for k, v in fs.items()}
     return type(obj)(**(dict(obj) | kwargs))
 
 
