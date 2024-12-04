@@ -224,11 +224,7 @@ This isn't so good either.
 
 `dataclassish.replace` is a one-liner that can work on any object (if it has a
 registered means to do so), regardless of mutability or nesting. Consider this
-fully immutable structure: And this is the simplest case, where the mutability
-of a [`dict`][dict-link] allows us to copy the full object and update it after.
-Note that we had to use
-[`deepcopy`](https://docs.python.org/3/library/copy.html#copy.deepcopy) to avoid
-mutating the sub-dicts. So what if the objects are immutable?
+fully immutable structure:
 
 ```pycon
 >>> @dataclass(frozen=True)
