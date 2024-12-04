@@ -57,7 +57,7 @@ pip install dataclassish
 
 ### Getting Started
 
-#### Working with a `@dataclass`
+#### Replacing a `@dataclass`
 
 In this example we'll show how `dataclassish` works exactly the same as
 [`dataclasses`][dataclasses-link] when working with a `@dataclass` object.
@@ -81,7 +81,7 @@ Point(x=1.0, y=2.0)
 Point(x=3.0, y=2.0)
 ```
 
-#### Working with a `dict`
+#### Replacing a `dict`
 
 Now we'll work with a [`dict`][dict-link] object. Note that
 [`dataclasses`][dataclasses-link] does _not_ work with [`dict`][dict-link]
@@ -106,7 +106,7 @@ objects, but with `dataclassish` it's easy!
 invalid keys {'z'}.
 ```
 
-#### The `__replace__` Method
+#### Replacing via the `__replace__` Method
 
 In Python 3.13+ objects can implement the `__replace__` method to define how
 `copy.replace` should operate on them. This was directly inspired by
@@ -133,7 +133,7 @@ HasReplace(a=1,b=3)
 
 ```
 
-#### Registering in a Custom Type
+#### Replacing a Custom Type
 
 Let's say there's a custom object that we want to use `replace` on, but which
 doesn't have a `__replace__` method (or which we want more control over using a
@@ -169,7 +169,7 @@ MyClass(a=1,b=2,c=3)
 MyClass(a=1,b=2,c=4.0)
 ```
 
-### Adding a Second Argument
+### Nested Replacement
 
 `replace` can also accept a second positional argument which is a dictionary
 specifying a nested replacement. For example consider the following dict of
@@ -305,6 +305,43 @@ utilities.
 - `field_values` returns the values of an object's fields.
 - `field_items` returns the names and values of an object's fields.
 
+```{code-block} python
+>>> from dataclassish import get_field, field_keys, field_values, field_items
+
+>>> p = Point(1.0, 2.0)
+
+>>> get_field(p, "x")
+1.0
+
+>>> field_keys(p)
+('x', 'y')
+
+>>> field_values(p)
+(1.0, 2.0)
+
+>>> field_items(p)
+(('x', 1.0), ('y', 2.0))
+```
+
+These functions work on any object that has been registered in, not just
+`@dataclass` objects.
+
+```{code-block} python
+>>> p = {"x": 1, "y": 2.0}
+
+>>> get_field(p, "x")
+1
+
+>>> field_keys(p)
+dict_keys(['x', 'y'])
+
+>>> field_values(p)
+dict_values([1, 2.0])
+
+>>> field_items(p)
+dict_items([('x', 1), ('y', 2.0)])
+```
+
 ### Converters
 
 While `dataclasses.field` itself does not allow for converters (See PEP 712)
@@ -368,8 +405,8 @@ As a quick example, we'll show how to use `NoFlag`.
 
 ```{code-block} python
 >>> from dataclassish import field_keys
->>> field_keys(flags.NoFlag, p)
-dict_keys(['x', 'y'])
+>>> tuple(field_keys(flags.NoFlag, p))
+('x', 'y')
 ```
 
 ## Citation
