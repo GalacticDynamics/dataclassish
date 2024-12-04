@@ -2,11 +2,13 @@
 
 __all__: list[str] = []
 
+from collections.abc import Mapping
 from typing import Any, TypeVar
 
 from plum import dispatch
 
-from .api import fields
+from .api import fields, replace
+from .types import F
 
 K = TypeVar("K")
 V = TypeVar("V")
@@ -35,6 +37,20 @@ def get_field(obj: Any, k: str, /) -> Any:
 
     """
     return getattr(obj, k)
+
+
+# ===================================================================
+# Replace
+
+
+def _recursive_replace_helper(obj: object, k: str, v: Any, /) -> Any:
+    if isinstance(v, F):
+        out = v.value
+    elif isinstance(v, Mapping):
+        out = replace(get_field(obj, k), v)
+    else:
+        out = v
+    return out
 
 
 # ===================================================================

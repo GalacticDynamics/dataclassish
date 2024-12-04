@@ -2,6 +2,7 @@
 
 __all__: list[str] = []
 
+import sys
 from collections.abc import Callable, Mapping
 from dataclasses import (
     Field,
@@ -14,124 +15,114 @@ from typing import Any
 
 from plum import dispatch
 
-from .types import DataclassInstance, F
+from .register_base import _recursive_replace_helper
+from .types import DataclassInstance
 
 # ===================================================================
 
+if sys.version_info < (3, 13):
 
-@dispatch  # type: ignore[misc]
-def get_field(obj: DataclassInstance, k: str, /) -> Any:
-    """Get a field of a dataclass instance by name.
+    @dispatch  # type: ignore[misc]
+    def get_field(obj: DataclassInstance, k: str, /) -> Any:
+        """Get a field of a dataclass instance by name.
 
-    Examples
-    --------
-    >>> from dataclasses import dataclass
-    >>> from dataclassish import get_field
+        Examples
+        --------
+        >>> from dataclasses import dataclass
+        >>> from dataclassish import get_field
 
-    >>> @dataclass
-    ... class Point:
-    ...     x: float
-    ...     y: float
+        >>> @dataclass
+        ... class Point:
+        ...     x: float
+        ...     y: float
 
-    >>> p = Point(1.0, 2.0)
-    >>> get_field(p, "x")
-    1.0
+        >>> p = Point(1.0, 2.0)
+        >>> get_field(p, "x")
+        1.0
 
-    """
-    return getattr(obj, k)
+        """
+        return getattr(obj, k)
 
 
 # ===================================================================
 # Replace
 
+if sys.version_info < (3, 13):
 
-@dispatch  # type: ignore[misc]
-def replace(obj: DataclassInstance, /, **kwargs: Any) -> DataclassInstance:
-    """Replace the fields of a dataclass instance.
+    @dispatch
+    def replace(obj: DataclassInstance, /, **kwargs: Any) -> DataclassInstance:
+        """Replace the fields of a dataclass instance.
 
-    Examples
-    --------
-    >>> from dataclasses import dataclass
-    >>> from dataclassish import replace
+        Examples
+        --------
+        >>> from dataclasses import dataclass
+        >>> from dataclassish import replace
 
-    >>> @dataclass
-    ... class Point:
-    ...     x: float
-    ...     y: float
+        >>> @dataclass
+        ... class Point:
+        ...     x: float
+        ...     y: float
 
-    >>> p = Point(1.0, 2.0)
-    >>> p
-    Point(x=1.0, y=2.0)
+        >>> p = Point(1.0, 2.0)
+        >>> p
+        Point(x=1.0, y=2.0)
 
-    >>> replace(p, x=3.0)
-    Point(x=3.0, y=2.0)
+        >>> replace(p, x=3.0)
+        Point(x=3.0, y=2.0)
 
-    """
-    return _dataclass_replace(obj, **kwargs)
+        """
+        return _dataclass_replace(obj, **kwargs)
 
+    @dispatch  # type: ignore[no-redef]
+    def replace(obj: DataclassInstance, fs: Mapping[str, Any], /) -> DataclassInstance:
+        """Replace the fields of a dataclass instance.
 
-def _recursive_replace_dataclass_helper(
-    obj: DataclassInstance, k: str, v: Any, /
-) -> Any:
-    if isinstance(v, F):
-        out = v.value
-    elif isinstance(v, Mapping):
-        out = replace(get_field(obj, k), v)
-    else:
-        out = v
-    return out
+        Examples
+        --------
+        >>> from dataclasses import dataclass
+        >>> from dataclassish import replace, F
 
+        >>> @dataclass
+        ... class Point:
+        ...     x: float | dict
+        ...     y: float
 
-@dispatch  # type: ignore[misc, no-redef]
-def replace(obj: DataclassInstance, fs: Mapping[str, Any], /) -> DataclassInstance:
-    """Replace the fields of a dataclass instance.
+        >>> @dataclass
+        ... class TwoPoints:
+        ...     a: Point
+        ...     b: Point
 
-    Examples
-    --------
-    >>> from dataclasses import dataclass
-    >>> from dataclassish import replace, F
+        >>> p = TwoPoints(Point(1.0, 2.0), Point(3.0, 4.0))
+        >>> p
+        TwoPoints(a=Point(x=1.0, y=2.0), b=Point(x=3.0, y=4.0))
 
-    >>> @dataclass
-    ... class Point:
-    ...     x: float | dict
-    ...     y: float
+        >>> replace(p, {"a": {"x": 5.0}, "b": {"y": 6.0}})
+        TwoPoints(a=Point(x=5.0, y=2.0), b=Point(x=3.0, y=6.0))
 
-    >>> @dataclass
-    ... class PointofPoints:
-    ...     a: Point
-    ...     b: Point
+        >>> replace(p, {"a": {"x": F({"thing": 5.0})}})
+        TwoPoints(a=Point(x={'thing': 5.0}, y=2.0),
+                    b=Point(x=3.0, y=4.0))
 
-    >>> p = PointofPoints(Point(1.0, 2.0), Point(3.0, 4.0))
-    >>> p
-    PointofPoints(a=Point(x=1.0, y=2.0), b=Point(x=3.0, y=4.0))
+        This also works on mixed-type structures, e.g. a dictionary of dataclasses.
 
-    >>> replace(p, {"a": {"x": 5.0}, "b": {"y": 6.0}})
-    PointofPoints(a=Point(x=5.0, y=2.0), b=Point(x=3.0, y=6.0))
+        >>> p = {"a": Point(1.0, 2.0), "b": Point(3.0, 4.0)}
+        >>> replace(p, {"a": {"x": 5.0}, "b": {"y": 6.0}})
+        {'a': Point(x=5.0, y=2.0), 'b': Point(x=3.0, y=6.0)}
 
-    >>> replace(p, {"a": {"x": F({"thing": 5.0})}})
-    PointofPoints(a=Point(x={'thing': 5.0}, y=2.0),
-                  b=Point(x=3.0, y=4.0))
+        Or a dataclass of dictionaries.
 
-    This also works on mixed-type structures, e.g. a dictionary of dataclasses.
+        >>> @dataclass
+        ... class Object:
+        ...     a: dict[str, Any]
+        ...     b: dict[str, Any]
 
-    >>> p = {"a": Point(1.0, 2.0), "b": Point(3.0, 4.0)}
-    >>> replace(p, {"a": {"x": 5.0}, "b": {"y": 6.0}})
-    {'a': Point(x=5.0, y=2.0), 'b': Point(x=3.0, y=6.0)}
+        >>> p = Object({"a": 1, "b": 2}, {"c": 3, "d": 4})
+        >>> replace(p, {"a": {"b": 5}, "b": {"c": 6}})
+        Object(a={'a': 1, 'b': 5}, b={'c': 6, 'd': 4})
 
-    Or a dataclass of dictionaries.
-
-    >>> @dataclass
-    ... class Object:
-    ...     a: dict[str, Any]
-    ...     b: dict[str, Any]
-
-    >>> p = Object({"a": 1, "b": 2}, {"c": 3, "d": 4})
-    >>> replace(p, {"a": {"b": 5}, "b": {"c": 6}})
-    Object(a={'a': 1, 'b': 5}, b={'c': 6, 'd': 4})
-
-    """
-    kwargs = {k: _recursive_replace_dataclass_helper(obj, k, v) for k, v in fs.items()}
-    return _dataclass_replace(obj, **kwargs)
+        """
+        kwargs = {k: _recursive_replace_helper(obj, k, v) for k, v in fs.items()}
+        return replace(obj, **kwargs)
 
 
 # ===================================================================

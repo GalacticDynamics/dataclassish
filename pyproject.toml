@@ -145,7 +145,9 @@ messages_control.disable = [
   "line-too-long",
   "missing-module-docstring",
   "missing-function-docstring",
+  "no-member",  # handled by mypy
   "no-value-for-parameter",  # for plum-dispatch
+  "too-many-function-args",  # handled by testing
   "unused-argument",  # handled by ruff
   "unused-wildcard-import",  # handled by ruff
   "wildcard-import",  # handled by ruff
