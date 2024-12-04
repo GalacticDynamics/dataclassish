@@ -44,20 +44,16 @@ pip install dataclassish
 
 ## Documentation
 
-- [Installation](#installation)
-- [Documentation](#documentation)
-  - [Getting Started](#getting-started)
-    - [Working with a `@dataclass`](#working-with-a-dataclass)
-    - [Working with a `dict`](#working-with-a-dict)
-    - [The `__replace__` Method](#the-__replace__-method)
-    - [Registering in a Custom Type](#registering-in-a-custom-type)
-  - [Adding a Second Argument](#adding-a-second-argument)
-  - [dataclass tools](#dataclass-tools)
-  - [More tools](#more-tools)
-  - [Converters](#converters)
-  - [Flags](#flags)
-- [Citation](#citation)
-- [Development](#development)
+- [Getting Started](#getting-started)
+  - [Working with a `@dataclass`](#working-with-a-dataclass)
+  - [Working with a `dict`](#working-with-a-dict)
+  - [The `__replace__` Method](#the-__replace__-method)
+  - [Registering in a Custom Type](#registering-in-a-custom-type)
+- [Adding a Second Argument](#adding-a-second-argument)
+- [dataclass tools](#dataclass-tools)
+- [More tools](#more-tools)
+- [Converters](#converters)
+- [Flags](#flags)
 
 ### Getting Started
 
