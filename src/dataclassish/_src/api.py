@@ -7,6 +7,7 @@ __all__ = [
     "asdict",
     "astuple",
     # Extensions
+    "get_field",
     "field_keys",
     "field_values",
     "field_items",
@@ -48,6 +49,12 @@ def astuple(obj: Any, /) -> tuple[Any, ...]:
 
 # ============================================================================
 # Extensions
+
+
+@dispatch.abstract  # type: ignore[misc]
+def get_field(obj: Any, field_name: str, /) -> Any:
+    """Get the value of a field from an object."""
+    raise NotImplementedError  # pragma: no cover
 
 
 @dispatch.abstract  # type: ignore[misc]

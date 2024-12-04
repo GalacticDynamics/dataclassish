@@ -8,16 +8,17 @@ __all__ = [
     # Submodules
     "converters",
     "flags",
-    # Dataclass API
-    "DataclassInstance",
+    # functions
     "replace",
     "fields",
     "asdict",
     "astuple",
-    # Extensions
+    "get_field",
     "field_keys",
     "field_values",
     "field_items",
+    # Classes
+    "DataclassInstance",
     "F",
 ]
 
@@ -29,6 +30,7 @@ from ._src.api import (
     field_keys,
     field_values,
     fields,
+    get_field,
     replace,
 )
 from ._src.types import DataclassInstance, F
