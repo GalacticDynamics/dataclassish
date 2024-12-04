@@ -45,10 +45,10 @@ pip install dataclassish
 ## Documentation
 
 - [Getting Started](#getting-started)
-- [Replacing a `@dataclass`](#replacing-a-dataclass)
-- [Replacing a `dict`](#replacing-a-dict)
-- [Replacing via the `__replace__` Method](#replacing-via-the-__replace__-method)
-- [Replacing a Custom Type](#replacing-a-custom-type)
+  - [Replacing a `@dataclass`](#replacing-a-dataclass)
+  - [Replacing a `dict`](#replacing-a-dict)
+  - [Replacing via the `__replace__` Method](#replacing-via-the-__replace__-method)
+  - [Replacing a Custom Type](#replacing-a-custom-type)
 - [Nested Replacement](#nested-replacement)
 - [dataclass tools](#dataclass-tools)
 - [More tools](#more-tools)
