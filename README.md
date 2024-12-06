@@ -404,13 +404,14 @@ consideration by the functions in `dataclassish`.
 ```pycon
 >>> from dataclassish import flags
 >>> flags.__all__
-['FlagConstructionError', 'AbstractFlag', 'NoFlag']
+['FlagConstructionError', 'AbstractFlag', 'NoFlag', 'FilterRepr']
 
 ```
 
-Where `AbstractFlag` is the base class for flags, and `NoFlag` is a flag that
-does nothing. `FlagConstructionError` is an error that is raised when a flag is
-constructed incorrectly.
+Where `AbstractFlag` is the base class for flags, `NoFlag` is a flag that does
+nothing, and `FilterRepr` will filter out any fields with `repr=True`.
+`FlagConstructionError` is an error that is raised when a flag is constructed
+incorrectly.
 
 As a quick example, we'll show how to use `NoFlag`.
 
@@ -418,6 +419,21 @@ As a quick example, we'll show how to use `NoFlag`.
 >>> from dataclassish import field_keys
 >>> tuple(field_keys(flags.NoFlag, p))
 ('x', 'y')
+
+```
+
+As another example, we'll show how to use `FilterRepr`.
+
+```pycon
+>>> from dataclasses import field
+>>> @dataclass
+... class Point:
+...     x: float
+...     y: float = field(repr=False)
+>>> obj = Point(1.0, 2.0)
+
+>>> field_keys(flags.FilterRepr, obj)
+('x',)
 
 ```
 
@@ -448,8 +464,6 @@ We welcome contributions!
 [pypi-link]:                https://pypi.org/project/dataclassish/
 [pypi-platforms]:           https://img.shields.io/pypi/pyversions/dataclassish
 [pypi-version]:             https://img.shields.io/pypi/v/dataclassish
-[rtd-badge]:                https://readthedocs.org/projects/dataclassish/badge/?version=latest
-[rtd-link]:                 https://dataclassish.readthedocs.io/en/latest/?badge=latest
 [ruff-badge]:               https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json
 [ruff-link]:                https://docs.astral.sh/ruff/
 [spec0-badge]:              https://img.shields.io/badge/SPEC-0-green?labelColor=%23004811&color=%235CA038

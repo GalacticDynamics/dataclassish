@@ -39,3 +39,14 @@ class AbstractFlag:
 @final
 class NoFlag(AbstractFlag):
     """No flag."""
+
+
+@final
+class FilterRepr(AbstractFlag):
+    """Filter items based on whether they are in the repr.
+
+    For dataclasses this is determined by ``repr=True`` in the field.
+    For dicts all items are included.
+    Behavior depends on the ``dataclassish.fields`` function.
+
+    """
