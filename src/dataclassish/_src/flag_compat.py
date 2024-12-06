@@ -9,13 +9,23 @@ from typing import Any, cast
 from plum import dispatch
 from typing_extensions import Never
 
-from .flags import AbstractFlag, NoFlag
+from .api import (
+    asdict,
+    astuple,
+    field_items,
+    field_keys,
+    field_values,
+    fields,
+    get_field,
+    replace,
+)
+from .flags import AbstractFlag, FilterRepr, NoFlag
 
 # ===================================================================
 # AbstractFlag
 
 
-@dispatch  # type: ignore[misc]
+@dispatch  # type: ignore[misc, no-redef]
 def replace(flag: type[AbstractFlag], _: Any, /, **__: Any) -> Never:  # noqa: ARG001
     """Raise an error if given an AbstractFlag when replacing.
 
@@ -39,7 +49,7 @@ def replace(flag: type[AbstractFlag], _: Any, /, **__: Any) -> Never:  # noqa: A
     raise ValueError(msg)
 
 
-@dispatch  # type: ignore[misc]
+@dispatch  # type: ignore[misc, no-redef]
 def fields(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used to get fields.
 
@@ -63,7 +73,7 @@ def fields(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     raise ValueError(msg)
 
 
-@dispatch  # type: ignore[misc]
+@dispatch  # type: ignore[misc, no-redef]
 def asdict(
     flag: type[AbstractFlag],  # noqa: ARG001
     _: Any,
@@ -93,7 +103,7 @@ def asdict(
     raise ValueError(msg)
 
 
-@dispatch  # type: ignore[misc]
+@dispatch  # type: ignore[misc, no-redef]
 def astuple(
     flag: type[AbstractFlag],  # noqa: ARG001
     _: Any,
@@ -123,7 +133,7 @@ def astuple(
     raise ValueError(msg)
 
 
-@dispatch  # type: ignore[misc]
+@dispatch  # type: ignore[misc, no-redef]
 def field_keys(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used with ``field_keys``.
 
@@ -147,7 +157,7 @@ def field_keys(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     raise ValueError(msg)
 
 
-@dispatch  # type: ignore[misc]
+@dispatch  # type: ignore[misc, no-redef]
 def field_values(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used with ``field_values``.
 
@@ -171,7 +181,7 @@ def field_values(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     raise ValueError(msg)
 
 
-@dispatch  # type: ignore[misc]
+@dispatch  # type: ignore[misc, no-redef]
 def field_items(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used with ``field_items``.
 
@@ -334,3 +344,313 @@ def field_items(flag: type[NoFlag], obj: Any, /) -> Iterable[tuple[Any, Any]]:  
 
     """
     return cast(Iterable[tuple[Any, Any]], field_items(obj))
+
+
+# ===================================================================
+# FilterRepr
+
+
+@dispatch  # type: ignore[misc, no-redef]
+def replace(_: type[FilterRepr], obj: Any, /, **kwargs: Any) -> Any:
+    """Replace the fields of an object, filtering based on repr.
+
+    Raises
+    ------
+    ValueError
+        If a field is in kwargs but has repr=False.
+
+    Examples
+    --------
+    >>> from dataclassish import replace
+    >>> from dataclassish.flags import FilterRepr
+
+    1) dataclass:
+
+    >>> from dataclasses import dataclass, field
+    >>> @dataclass
+    ... class Point:
+    ...     x: float
+    ...     y: float = field(repr=False)
+    >>> obj = Point(1.0, 2.0)
+
+    >>> replace(FilterRepr, obj, x=3.0)
+    Point(x=3.0)
+
+    >>> try: replace(FilterRepr, obj, y=3.0)
+    ... except ValueError as e: print(e)
+    Fields ['y'] are in kwargs but are repr=False.
+
+    2) dict:
+
+    >>> obj = {"x": 1.0, "y": 2.0}
+    >>> replace(FilterRepr, obj, x=3.0)
+    {'x': 3.0, 'y': 2.0}
+
+    """
+    # Determine if any changes are
+    fs_in_kw_but_repr = [f.name for f in fields(obj) if f.name in kwargs if not f.repr]
+    if fs_in_kw_but_repr:
+        msg = f"Fields {fs_in_kw_but_repr} are in kwargs but are repr=False."
+        raise ValueError(msg)
+
+    return replace(obj, **kwargs)
+
+
+@dispatch  # type: ignore[misc, no-redef]
+def fields(_: type[FilterRepr], obj: Any) -> tuple[Field, ...]:  # type: ignore[type-arg]
+    """Return fields of the object, filtering based on repr.
+
+    Examples
+    --------
+    >>> from dataclassish import fields
+    >>> from dataclassish.flags import FilterRepr
+
+    1) dataclass:
+
+    >>> from dataclasses import dataclass, field
+    >>> @dataclass
+    ... class Point:
+    ...     x: float
+    ...     y: float = field(repr=False)
+    >>> obj = Point(1.0, 2.0)
+
+    >>> fields(FilterRepr, obj)
+    (Field(name='x',...),)
+
+    2) dict:
+
+    >>> obj = {"x": 1.0, "y": 2.0}
+    >>> fields(FilterRepr, obj)
+    (Field(name='x',...), Field(name='y',...))
+
+    """
+    return tuple(f for f in fields(obj) if f.repr)
+
+
+@dispatch  # type: ignore[misc, no-redef]
+def asdict(
+    flag: type[FilterRepr],
+    obj: Any,
+    /,
+    *,
+    dict_factory: Callable[[list[tuple[str, Any]]], dict[str, Any]] = dict,
+) -> dict[str, Any]:
+    """Return the fields as a mapping, filtering based on repr.
+
+    Examples
+    --------
+    >>> from dataclassish import asdict
+    >>> from dataclassish.flags import FilterRepr
+
+    1) dataclass:
+
+    >>> from dataclasses import dataclass, field
+    >>> @dataclass
+    ... class Point:
+    ...     x: float
+    ...     y: float = field(repr=False)
+    >>> obj = Point(1.0, 2.0)
+
+    >>> asdict(FilterRepr, obj)
+    {'x': 1.0}
+
+    2) dict:
+
+    >>> obj = {"x": 1.0, "y": 2.0}
+    >>> asdict(FilterRepr, obj)
+    {'x': 1.0, 'y': 2.0}
+
+    """
+    all_dict = asdict(obj)
+    keep_keys = field_keys(flag, obj)
+    return dict_factory([(k, all_dict[k]) for k in keep_keys])
+
+
+@dispatch  # type: ignore[misc, no-redef]
+def astuple(
+    _: type[FilterRepr],
+    obj: Any,
+    /,
+    *,
+    tuple_factory: Callable[[Any], tuple[Any, ...]] = tuple,
+) -> tuple[Any, ...]:
+    """Return the fields of an object as a tuple, filtering based on repr.
+
+    Examples
+    --------
+    >>> from dataclassish import astuple
+    >>> from dataclassish.flags import FilterRepr
+
+    1) dataclass:
+
+    >>> from dataclasses import dataclass, field
+    >>> @dataclass
+    ... class Point:
+    ...     x: float
+    ...     y: float = field(repr=False)
+    >>> obj = Point(1.0, 2.0)
+
+    >>> astuple(FilterRepr, obj)
+    (1.0,)
+
+    2) dict:
+
+    >>> obj = {"x": 1.0, "y": 2.0}
+    >>> astuple(FilterRepr, obj)
+    (1.0, 2.0)
+
+    """
+    tup = astuple(obj)
+    keep = [f.repr for f in fields(obj)]
+    return tuple_factory([x for x, cond in zip(tup, keep, strict=True) if cond])
+
+
+@dispatch  # type: ignore[misc, no-redef]
+def get_field(_: type[FilterRepr], obj: Any, field_name: str) -> Any:
+    """Get the value of a field from an object, filtering based on repr.
+
+    Raises
+    ------
+    ValueError
+        If the field is repr=False.
+
+    Examples
+    --------
+    >>> from dataclassish import get_field
+    >>> from dataclassish.flags import FilterRepr
+
+    1) dataclass:
+
+    >>> from dataclasses import dataclass, field
+    >>> @dataclass
+    ... class Point:
+    ...     x: float
+    ...     y: float = field(repr=False)
+    >>> obj = Point(1.0, 2.0)
+
+    >>> get_field(FilterRepr, obj, "x")
+    1.0
+
+    >>> try: get_field(FilterRepr, obj, "z")
+    ... except ValueError as e: print(e)
+    Field z not found.
+
+    >>> try: get_field(FilterRepr, obj, "y")
+    ... except ValueError as e: print(e)
+    Field y is repr=False.
+
+    2) dict:
+
+    >>> obj = {"x": 1.0, "y": 2.0}
+    >>> get_field(FilterRepr, obj, "x")
+    1.0
+
+    """
+    f = [f.repr for f in fields(obj) if f.name == field_name]
+    if not f:
+        msg = f"Field {field_name} not found."
+        raise ValueError(msg)
+    if not f[0]:
+        msg = f"Field {field_name} is repr=False."
+        raise ValueError(msg)
+
+    return get_field(obj, field_name)
+
+
+@dispatch  # type: ignore[misc, no-redef]
+def field_keys(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
+    """Return the keys of an object, filtering based on repr.
+
+    Examples
+    --------
+    >>> from dataclassish import field_keys
+    >>> from dataclassish.flags import FilterRepr
+
+    1) dataclass:
+
+    >>> from dataclasses import dataclass, field
+    >>> @dataclass
+    ... class Point:
+    ...     x: float
+    ...     y: float = field(repr=False)
+    >>> obj = Point(1.0, 2.0)
+
+    >>> field_keys(FilterRepr, obj)
+    ('x',)
+
+    2) dict:
+
+    >>> obj = {"x": 1.0, "y": 2.0}
+    >>> field_keys(FilterRepr, obj)
+    ('x', 'y')
+
+    """
+    return tuple(k for k, f in zip(field_keys(obj), fields(obj), strict=True) if f.repr)
+
+
+@dispatch  # type: ignore[misc, no-redef]
+def field_values(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
+    """Return the values of an object, filtering based on repr.
+
+    Examples
+    --------
+    >>> from dataclassish import field_values
+    >>> from dataclassish.flags import FilterRepr
+
+    1) dataclass:
+
+    >>> from dataclasses import dataclass, field
+    >>> @dataclass
+    ... class Point:
+    ...     x: float
+    ...     y: float = field(repr=False)
+    >>> obj = Point(1.0, 2.0)
+
+    >>> field_values(FilterRepr, obj)
+    (1.0,)
+
+    2) dict:
+
+    >>> obj = {"x": 1.0, "y": 2.0}
+    >>> field_values(FilterRepr, obj)
+    (1.0, 2.0)
+
+    """
+    return tuple(
+        v for v, f in zip(field_values(obj), fields(obj), strict=True) if f.repr
+    )
+
+
+@dispatch  # type: ignore[misc, no-redef]
+def field_items(_: type[FilterRepr], obj: Any) -> tuple[tuple[Any, Any], ...]:
+    """Return the items of an object, filtering based on repr.
+
+    Examples
+    --------
+    >>> from dataclassish import field_items
+    >>> from dataclassish.flags import FilterRepr
+
+    1) dataclass:
+
+    >>> from dataclasses import dataclass, field
+    >>> @dataclass
+    ... class Point:
+    ...     x: float
+    ...     y: float = field(repr=False)
+    >>> obj = Point(1.0, 2.0)
+
+    >>> field_items(FilterRepr, obj)
+    (('x', 1.0),)
+
+    2) dict:
+
+    >>> obj = {"x": 1.0, "y": 2.0}
+    >>> field_items(FilterRepr, obj)
+    (('x', 1.0), ('y', 2.0))
+
+    """
+    return tuple(
+        (k, v)
+        for (k, v), f in zip(field_items(obj), fields(obj), strict=True)
+        if f.repr
+    )
