@@ -126,7 +126,7 @@ def fields(obj: Mapping[str, Any], /) -> tuple[Field, ...]:  # type: ignore[type
      Field(name='c',type=<class 'str'>,...))
 
     """
-    fs = tuple(field(kw_only=True) for _ in obj)  # pylint: disable=invalid-field-call
+    fs = tuple(field(kw_only=True) for _ in obj)
     for f, (k, v) in zip(fs, obj.items(), strict=True):
         f.name = k
         f.type = type(v)

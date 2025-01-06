@@ -131,26 +131,3 @@ ignore = [
 [tool.ruff.lint.isort]
 combine-as-imports = true
 extra-standard-library = ["typing_extensions"]
-
-
-[tool.pylint]
-py-version = "3.10"
-ignore-paths = [".*/_version.py"]
-reports.output-format = "colorized"
-similarities.ignore-imports = "yes"
-messages_control.disable = [
-  "design",
-  "duplicate-code",  # too small of a project
-  "fixme",
-  "function-redefined",  # for plum-dispatch
-  "line-too-long",
-  "missing-module-docstring",
-  "missing-function-docstring",
-  "no-member",  # handled by mypy
-  "no-value-for-parameter",  # for plum-dispatch
-  "too-many-function-args",  # handled by testing
-  "unused-argument",  # handled by ruff
-  "unused-wildcard-import",  # handled by ruff
-  "wildcard-import",  # handled by ruff
-  "wrong-import-position",
-]

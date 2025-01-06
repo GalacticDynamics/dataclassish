@@ -7,7 +7,6 @@ functions. If you need more, check out ``attrs``!
 
 """
 # ruff:noqa: N801
-# pylint: disable=C0103
 
 __all__ = [
     # Converters
