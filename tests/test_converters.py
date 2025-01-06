@@ -77,7 +77,7 @@ def test_field():
 def test_dataclass_with_converter():
     """Test `dataclass` with a converter field."""
 
-    @dataclass
+    @dataclass(frozen=True, slots=True)
     class MyClass:
         attr: int | None = field(
             default=2.0, converter=dataclassish.converters.Optional(int)
@@ -101,7 +101,7 @@ def test_dataclass_with_converter():
 def test_dataclass_skip_convert():
     """Test `dataclass` with `_skip_convert` flag."""
 
-    @dataclass
+    @dataclass(frozen=True, slots=True)
     class MyClass:
         attr: int | None = field(
             default=2.0, converter=dataclassish.converters.Optional(int)
@@ -119,7 +119,7 @@ def test_dataclass_with_field_descriptor():
         def __get__(self, instance, owner):
             return 42
 
-    @dataclass
+    @dataclass(frozen=True, slots=True)
     class MyClass:
         attr: int = field(default=0, converter=int)
         descriptor: int = Descriptor()
@@ -131,3 +131,14 @@ def test_dataclass_with_field_descriptor():
     obj = MyClass(attr=1.0)
     assert obj.attr == 1
     assert obj.descriptor == 42
+
+
+def test_dataclass_with_missing_mandatory_field():
+    """Test `dataclass` with a missing mandatory field."""
+
+    @dataclass(frozen=True, slots=True)
+    class MyClass:
+        attr: int | None = field()
+
+    with pytest.raises(TypeError, match="missing 1 required positional argument"):
+        _ = MyClass()
