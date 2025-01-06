@@ -21,6 +21,7 @@ __all__ = [
 import dataclasses
 import functools
 import inspect
+import sys
 from abc import ABCMeta, abstractmethod
 from collections.abc import Callable, Hashable, Mapping
 from typing import (
@@ -28,11 +29,12 @@ from typing import (
     ClassVar,
     Generic,
     Protocol,
+    TypedDict,
     TypeVar,
     cast,
     overload,
 )
-from typing_extensions import dataclass_transform
+from typing_extensions import NotRequired, dataclass_transform
 
 ArgT = TypeVar("ArgT")  # Input type
 RetT = TypeVar("RetT")  # Return type
@@ -165,11 +167,29 @@ class Unless(AbstractConverter[ArgT, RetT], Generic[ArgT, PassThroughTs, RetT]):
 _CT = TypeVar("_CT")
 
 
+# TODO: how to express default_factory is mutually exclusive with default?
+if sys.version_info < (3, 12):
+    DataclassFieldKwargsNotMetadata = Any
+
+else:
+
+    class DataclassFieldKwargsNotMetadata(TypedDict):
+        """Keyword arguments for `dataclasses.field`."""
+
+        default: NotRequired[object]
+        init: NotRequired[bool]
+        repr: NotRequired[bool]
+        hash: NotRequired[bool | None]
+        compare: NotRequired[bool]
+        kw_only: NotRequired[bool]
+        metadata: NotRequired[Mapping[Hashable, Any]]
+
+
 def field(
     *,
     converter: Callable[[Any], Any] | None = None,
     metadata: Mapping[Hashable, Any] | None = None,
-    **kwargs: Any,
+    **kwargs: DataclassFieldKwargsNotMetadata,
 ) -> Any:
     """Dataclass field with a converter argument.
 
@@ -246,7 +266,7 @@ def _process_dataclass(cls: type[_CT], **kwargs: Any) -> type[_CT]:
                 ba.arguments[k] = converter(ba.arguments[k])
 
         #  Call the original dataclass __init__ method
-        self.__init__.__wrapped__(self, *ba.args, **ba.kwargs)  # type: ignore[misc]
+        init.__wrapped__(self, *ba.args, **ba.kwargs)
 
     dcls.__init__ = init  # type: ignore[assignment, method-assign]
 
