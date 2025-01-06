@@ -130,6 +130,7 @@ ignore = [
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
+extra-standard-library = ["typing_extensions"]
 
 
 [tool.pylint]

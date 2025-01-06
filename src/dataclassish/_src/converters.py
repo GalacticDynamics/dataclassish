@@ -9,12 +9,31 @@ functions. If you need more, check out ``attrs``!
 # ruff:noqa: N801
 # pylint: disable=C0103
 
-__all__ = ["AbstractConverter", "Optional", "Unless"]
+__all__ = [
+    # Converters
+    "AbstractConverter",
+    "Optional",
+    "Unless",
+    # Minimal dataclass implementation
+    "dataclass",
+    "field",
+]
 
 import dataclasses
+import functools
+import inspect
 from abc import ABCMeta, abstractmethod
-from collections.abc import Callable
-from typing import Any, Generic, TypeVar, cast, overload
+from collections.abc import Callable, Hashable, Mapping
+from typing import (
+    Any,
+    ClassVar,
+    Generic,
+    Protocol,
+    TypeVar,
+    cast,
+    overload,
+)
+from typing_extensions import dataclass_transform
 
 ArgT = TypeVar("ArgT")  # Input type
 RetT = TypeVar("RetT")  # Return type
@@ -139,3 +158,155 @@ class Unless(AbstractConverter[ArgT, RetT], Generic[ArgT, PassThroughTs, RetT]):
             if isinstance(value, self.unconverted_types)
             else self.converter(cast(ArgT, value))
         )
+
+
+#####################################################################
+# Minimal implementation of a dataclass supporting converters.
+
+_CT = TypeVar("_CT")
+
+
+def field(
+    *,
+    converter: Callable[[Any], Any] | None = None,
+    metadata: Mapping[Hashable, Any] | None = None,
+    **kwargs: Any,
+) -> Any:
+    """Dataclass field with a converter argument.
+
+    Parameters
+    ----------
+    converter : callable, optional
+        A callable that converts the value of the field. This is added to the
+        metadata of the field.
+    metadata : Mapping[Hashable, Any], optional
+        Additional metadata to add to the field.
+        See `dataclasses.field` for more information.
+    **kwargs : Any
+        Additional keyword arguments to pass to `dataclasses.field`.
+
+    """
+    if converter is not None:
+        # Check the converter
+        if not callable(converter):
+            msg = f"converter must be callable, got {converter!r}"  # type: ignore[unreachable]
+            raise TypeError(msg)
+
+        # Convert the metadata to a mutable dict if it is not None.
+        metadata = dict(metadata) if metadata is not None else {}
+
+        if "converter" in metadata:
+            msg = "cannot specify 'converter' in metadata and as a keyword argument."
+            raise ValueError(msg)
+
+        # Add the converter to the metadata
+        metadata["converter"] = converter
+
+    return dataclasses.field(metadata=metadata, **kwargs)
+
+
+class DataclassInstance(Protocol):
+    __dataclass_fields__: ClassVar[dict[str, dataclasses.Field[Any]]]
+
+
+def _process_dataclass(cls: type[_CT], **kwargs: Any) -> type[_CT]:
+    # Make the dataclass from the class.
+    # This does all the usual dataclass stuff.
+    dcls: type[_CT] = dataclasses.dataclass(cls, **kwargs)
+
+    # Compute the signature of the __init__ method
+    sig = inspect.signature(dcls.__init__)
+    # Eliminate the 'self' parameter
+    sig = sig.replace(parameters=list(sig.parameters.values())[1:])
+    # Store the signature on the __init__ method (Not assigning to __signature__
+    # because that should have `self`).
+    dcls.__init__._obj_signature_ = sig  # type: ignore[attr-defined]
+
+    # Ensure that the __init__ method does conversion
+    @functools.wraps(dcls.__init__)  # give it the same signature
+    def init(
+        self: DataclassInstance, *args: Any, _skip_convert: bool = False, **kwargs: Any
+    ) -> None:
+        # Fast path: no conversion
+        if _skip_convert:
+            self.__init__.__wrapped__(self, *args, **kwargs)  # type: ignore[misc]
+            return
+
+        # Bind the arguments to the signature
+        ba = self.__init__._obj_signature_.bind_partial(*args, **kwargs)  # type: ignore[misc]
+        ba.apply_defaults()  # so eligible for conversion
+
+        # Convert the fields, if there's a converter
+        for f in dataclasses.fields(self):
+            k = f.name
+            if k not in ba.arguments:  # mandatory field not provided?!
+                continue  # defer the error to the dataclass __init__
+
+            converter = f.metadata.get("converter")
+            if converter is not None:
+                ba.arguments[k] = converter(ba.arguments[k])
+
+        #  Call the original dataclass __init__ method
+        self.__init__.__wrapped__(self, *ba.args, **ba.kwargs)  # type: ignore[misc]
+
+    dcls.__init__ = init  # type: ignore[assignment, method-assign]
+
+    return dcls
+
+
+@overload
+def dataclass(cls: type[_CT], /, **kwargs: Any) -> type[_CT]: ...
+
+
+@overload
+def dataclass(**kwargs: Any) -> Callable[[type[_CT]], type[_CT]]: ...
+
+
+@dataclass_transform(field_specifiers=(dataclasses.Field, dataclasses.field, field))
+def dataclass(
+    cls: type[_CT] | None = None, /, **kwargs: Any
+) -> type[_CT] | Callable[[type[_CT]], type[_CT]]:
+    """Make a dataclass, supporting field converters.
+
+    For more information about dataclasses see the `dataclasses` module.
+
+    Parameters
+    ----------
+    cls : type | None, optional
+        The class to transform into a dataclass. If `None`, returns a partial
+        function that can be used as a decorator.
+    **kwargs : Any
+        Additional keyword arguments to pass to `dataclasses.dataclass`.
+
+    Examples
+    --------
+    >>> from dataclassish.converters import Optional
+    >>> from dataclassish._src.converters import dataclass, field
+
+    >>> @dataclass
+    ... class MyClass:
+    ...     attr: int | None = field(default=2.0, converter=Optional(int))
+
+    The converter is applied to the default value:
+
+    >>> MyClass().attr
+    2
+
+    The converter is applied to the input value:
+
+    >>> MyClass(None).attr is None
+    True
+
+    >>> MyClass(1).attr
+    1
+
+    And will work for any input value that the converter can handle, e.g.
+    ``int(str)``:
+
+    >>> MyClass("3").attr
+    3
+
+    """
+    if cls is None:
+        return functools.partial(_process_dataclass, **kwargs)
+    return _process_dataclass(cls, **kwargs)

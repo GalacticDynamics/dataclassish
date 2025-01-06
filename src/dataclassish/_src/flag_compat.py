@@ -5,9 +5,9 @@ __all__: list[str] = []
 from collections.abc import Callable, Iterable
 from dataclasses import Field
 from typing import Any, cast
+from typing_extensions import Never
 
 from plum import dispatch
-from typing_extensions import Never
 
 from .api import (
     asdict,
