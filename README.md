@@ -392,6 +392,27 @@ None
 
 ```
 
+This library also provide a lightweight dataclass-like decorator and field
+function that supports these converters and converters in general.
+
+```pycon
+>>> from dataclassish.converters import dataclass, field
+
+>>> @dataclass
+... class MyClass:
+...     a: int | None = field(converter=Optional(int))
+...     b: str = field(converter=str.upper)
+
+>>> obj = MyClass(a="1", b="hello")
+>>> obj
+MyClass(a=1, b='HELLO')
+
+>>> obj = MyClass(a=None, b="there")
+>>> obj
+MyClass(a=None, b='THERE')
+
+```
+
 ### Flags
 
 `dataclassish` provides flags for customizing the behavior of functions. For

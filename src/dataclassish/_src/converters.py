@@ -164,7 +164,7 @@ class Unless(AbstractConverter[ArgT, RetT], Generic[ArgT, PassThroughTs, RetT]):
 #####################################################################
 # Minimal implementation of a dataclass supporting converters.
 
-_CT = TypeVar("_CT")
+_CT = TypeVar("_CT")  # class type
 
 
 # TODO: how to express default_factory is mutually exclusive with default?
@@ -228,7 +228,25 @@ class DataclassInstance(Protocol):
     __dataclass_fields__: ClassVar[dict[str, dataclasses.Field[Any]]]
 
 
-def _process_dataclass(cls: type[_CT], **kwargs: Any) -> type[_CT]:
+def process_dataclass(cls: type[_CT], **kwargs: Any) -> type[_CT]:
+    """Process a class into a dataclass with converters.
+
+    Parameters
+    ----------
+    cls : type
+        The class to transform into a dataclass.
+    **kwargs : Any
+        Additional keyword arguments to pass to `dataclasses.dataclass`.
+
+    Returns
+    -------
+    type[DataclassInstance]
+        The dataclass, it's a transformed version of the input class `cls`. This
+        also adds the argument ``_skip_convert`` to the `__init__` method, which
+        allows for skipping the conversion of fields. This provides a fast path
+        for when the input values are already converted.
+
+    """
     # Make the dataclass from the class.
     # This does all the usual dataclass stuff.
     dcls: type[_CT] = dataclasses.dataclass(cls, **kwargs)
@@ -292,8 +310,8 @@ def dataclass(
     Parameters
     ----------
     cls : type | None, optional
-        The class to transform into a dataclass. If `None`, returns a partial
-        function that can be used as a decorator.
+        The class to transform into a dataclass. If `None`, `dataclass` returns
+        a partial function that can be used as a decorator.
     **kwargs : Any
         Additional keyword arguments to pass to `dataclasses.dataclass`.
 
@@ -327,5 +345,5 @@ def dataclass(
 
     """
     if cls is None:
-        return functools.partial(_process_dataclass, **kwargs)
-    return _process_dataclass(cls, **kwargs)
+        return functools.partial(process_dataclass, **kwargs)
+    return process_dataclass(cls, **kwargs)
