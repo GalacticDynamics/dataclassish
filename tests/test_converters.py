@@ -37,11 +37,6 @@ def test_unless_object():
     assert converter("1.0") == 1.0
 
 
-def test_field_not_public():
-    """Test `field` is not public."""
-    assert not hasattr(dataclassish.converters, "field")
-
-
 def test_field():
     """Test `field`."""
     converter = dataclassish.converters.Optional(int)
