@@ -219,7 +219,6 @@ wheels = [
 
 [[package]]
 name = "dataclassish"
-version = "0.7.2.dev1+g7fb9f2f.d20250115"
 source = { editable = "." }
 dependencies = [
     { name = "plum-dispatch" },
