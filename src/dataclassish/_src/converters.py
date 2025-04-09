@@ -155,9 +155,9 @@ class Unless(AbstractConverter[ArgT, RetT], Generic[ArgT, PassThroughTs, RetT]):
     def __call__(self, value: ArgT | PassThroughTs, /) -> RetT | PassThroughTs:
         """Pass through the input value."""
         return (
-            cast(PassThroughTs, value)
+            cast("PassThroughTs", value)
             if isinstance(value, self.unconverted_types)
-            else self.converter(cast(ArgT, value))
+            else self.converter(cast("ArgT", value))
         )
 
 

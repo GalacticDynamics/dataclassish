@@ -243,7 +243,7 @@ def fields(flag: type[NoFlag], obj: Any, /) -> tuple[Field, ...]:  # type: ignor
      Field(name='c',type=<class 'str'>,...))
 
     """
-    return cast(tuple[Field, ...], fields(obj))  # type: ignore[type-arg]
+    return cast("tuple[Field, ...]", fields(obj))  # type: ignore[type-arg]
 
 
 @dispatch  # type: ignore[misc, no-redef]
@@ -269,7 +269,7 @@ def asdict(
     False
 
     """
-    return cast(dict[str, Any], asdict(obj, dict_factory=dict_factory))
+    return cast("dict[str, Any]", asdict(obj, dict_factory=dict_factory))
 
 
 @dispatch  # type: ignore[misc, no-redef]
@@ -292,7 +292,7 @@ def astuple(
     (1, 2.0, '3')
 
     """
-    return cast(tuple[Any, ...], astuple(obj, tuple_factory=tuple_factory))
+    return cast("tuple[Any, ...]", astuple(obj, tuple_factory=tuple_factory))
 
 
 @dispatch  # type: ignore[misc, no-redef]
@@ -309,7 +309,7 @@ def field_keys(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG00
     dict_keys(['a', 'b', 'c'])
 
     """
-    return cast(Iterable[Any], field_keys(obj))
+    return cast("Iterable[Any]", field_keys(obj))
 
 
 @dispatch  # type: ignore[misc, no-redef]
@@ -326,7 +326,7 @@ def field_values(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG
     dict_values([1, 2.0, '3'])
 
     """
-    return cast(Iterable[Any], field_values(obj))
+    return cast("Iterable[Any]", field_values(obj))
 
 
 @dispatch  # type: ignore[misc, no-redef]
@@ -343,7 +343,7 @@ def field_items(flag: type[NoFlag], obj: Any, /) -> Iterable[tuple[Any, Any]]:  
     dict_items([('a', 1), ('b', 2.0), ('c', '3')])
 
     """
-    return cast(Iterable[tuple[Any, Any]], field_items(obj))
+    return cast("Iterable[tuple[Any, Any]]", field_items(obj))
 
 
 # ===================================================================
