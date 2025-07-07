@@ -6,7 +6,6 @@ includes: ``attrs`` and ``equinox``. This module provides a few useful converter
 functions. If you need more, check out ``attrs``!
 
 """
-# ruff:noqa: N801
 
 __all__ = [
     # Converters
