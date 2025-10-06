@@ -54,7 +54,7 @@ def test_field():
     # converter also in metadata
     with pytest.raises(
         ValueError,
-        match="cannot specify 'converter' in metadata and as a keyword argument.",
+        match=r"cannot specify 'converter' in metadata and as a keyword argument.",
     ):
         _ = field(converter=converter, metadata={"converter": 1})
 
