@@ -55,8 +55,8 @@ jobs:
 
       - name: Test package
         run: >-
-          uv run --group test pytest -ra --cov --cov-report=xml --cov-report=term
-          --durations=20
+          uv run --group test pytest -ra --cov --cov-report=xml
+          --cov-report=term --durations=20
 
       - name: Upload coverage report
         uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
@@ -83,7 +83,8 @@ jobs:
 
       - name: Test package
         run: >-
-          uv run --group test --resolution lowest-direct pytest --cov --cov-report=xml --cov-report=term --durations=20
+          uv run --group test --resolution lowest-direct pytest --cov
+          --cov-report=xml --cov-report=term --durations=20
 
       - name: Upload coverage report
         uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
