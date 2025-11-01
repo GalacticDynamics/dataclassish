@@ -27,14 +27,6 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
-        with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-
-      - name: "Set up Python"
-        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
-        with:
-          python-version-file: ".python-version"
 
       - name: Install the project
         run: uv sync --group nox
@@ -59,23 +51,11 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
         with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-
-      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
-        with:
           python-version: ${{ matrix.python-version }}
-          allow-prereleases: true
-
-      - name: Set up Python ${{ matrix.python-version }}
-        run: uv python install ${{ matrix.python-version }}
-
-      - name: Install the project
-        run: uv sync --group test
 
       - name: Test package
         run: >-
-          uv run pytest -ra --cov --cov-report=xml --cov-report=term
+          uv run --group test pytest -ra --cov --cov-report=xml --cov-report=term
           --durations=20
 
       - name: Upload coverage report
@@ -99,19 +79,11 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@85856786d1ce8acfbcc2f13a5f3fbd6b938f9f41 # v7.1.2
         with:
-          enable-cache: true
-          cache-dependency-glob: "uv.lock"
-
-      - name: Set up Python ${{ matrix.python-version }}
-        run: uv python install ${{ matrix.python-version }}
-
-      - name: Install the project
-        run: uv sync --group test --resolution lowest-direct
+          python-version: ${{ matrix.python-version }}
 
       - name: Test package
         run: >-
-          uv run pytest -ra --cov --cov-report=xml --cov-report=term
-          --durations=20
+          uv run --group test --resolution lowest-direct pytest --cov --cov-report=xml --cov-report=term --durations=20
 
       - name: Upload coverage report
         uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
