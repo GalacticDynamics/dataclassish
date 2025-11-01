@@ -48,10 +48,10 @@ dev = [
 ]
 nox = ["nox>=2024.10.9"]
 test = [
-  "attrs",
-  "pytest >=6",
-  "pytest-cov >=3",
-  "sybil",
+  "attrs>=25.4.0",
+  "pytest>=8.4.2",
+  "pytest-cov>=7.0.0",
+  "sybil[pytest]>=9.2.0",
 ]
 
 [tool.hatch]
@@ -64,7 +64,7 @@ name = "cz_gitmoji"
 
 
 [tool.pytest.ini_options]
-minversion = "6.0"
+minversion = "8.0"
 addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
 xfail_strict = true
 filterwarnings = [
