@@ -17,8 +17,7 @@ from .register_base import _recursive_replace_helper
 def get_field(obj: Mapping[Hashable, Any], k: Hashable, /) -> Any:
     """Get a field of a mapping by key.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import get_field
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
@@ -40,8 +39,7 @@ def replace(obj: Mapping[str, Any], /, **kwargs: Any) -> Mapping[str, Any]:
     This operates similarly to `dict.update`, except that
     the kwargs are checked against the keys of the mapping.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclasses import dataclass
     >>> from dataclassish import replace
 
@@ -73,8 +71,7 @@ def replace(
 ) -> Mapping[Hashable, Any]:
     """Replace the fields of a mapping.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import replace, F
 
     >>> p = {"a": 1, "b": 2.0, "c": {"aa": 3, "bb": 4}}
@@ -115,8 +112,7 @@ def replace(
 def fields(obj: Mapping[str, Any], /) -> tuple[Field, ...]:  # type: ignore[type-arg]  # TODO: raise issue in beartype
     """Return the mapping as a tuple of `dataclass.Field` objects.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import fields
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
@@ -149,8 +145,7 @@ def asdict(
     Following the `asdict` API, the dictionary may be copied if ``dict_factory``
     performs a copy when constructed from a :class:`~collections.abc.Mapping`.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import asdict
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
@@ -177,8 +172,7 @@ def astuple(
 ) -> tuple[Any, ...]:
     """Return the fields of a mapping as a tuple.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import astuple
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
@@ -197,8 +191,7 @@ def astuple(
 def field_keys(obj: Mapping[Hashable, Any]) -> KeysView[Hashable]:
     """Return the keys of a mapping.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_keys
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
@@ -217,8 +210,7 @@ def field_keys(obj: Mapping[Hashable, Any]) -> KeysView[Hashable]:
 def field_values(obj: Mapping[Any, Any]) -> ValuesView[Any]:
     """Return the values of a mapping.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_values
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}
@@ -237,8 +229,7 @@ def field_values(obj: Mapping[Any, Any]) -> ValuesView[Any]:
 def field_items(obj: Mapping[Any, Any]) -> ItemsView[Any, Any]:
     """Return the items of a mapping.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_items
 
     >>> p = {"a": 1, "b": 2.0, "c": "3"}

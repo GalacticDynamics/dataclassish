@@ -20,12 +20,10 @@ from .flags import AbstractFlag, FilterRepr, NoFlag
 def replace(flag: type[AbstractFlag], _: Any, /, **__: Any) -> Never:  # noqa: ARG001
     """Raise an error if given an AbstractFlag when replacing.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import replace
     >>> from dataclassish.flags import AbstractFlag
 
@@ -44,12 +42,10 @@ def replace(flag: type[AbstractFlag], _: Any, /, **__: Any) -> Never:  # noqa: A
 def fields(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used to get fields.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import fields
     >>> from dataclassish.flags import AbstractFlag
 
@@ -74,12 +70,10 @@ def asdict(
 ) -> Never:
     """Raise an error if an AbstractFlag is used with ``asdict``.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import asdict
     >>> from dataclassish.flags import AbstractFlag
 
@@ -104,12 +98,10 @@ def astuple(
 ) -> Never:
     """Raise an error if an AbstractFlag is used with ``asdict``.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import astuple
     >>> from dataclassish.flags import AbstractFlag
 
@@ -128,12 +120,10 @@ def astuple(
 def field_keys(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used with ``field_keys``.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_keys
     >>> from dataclassish.flags import AbstractFlag
 
@@ -152,12 +142,10 @@ def field_keys(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
 def field_values(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used with ``field_values``.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_values
     >>> from dataclassish.flags import AbstractFlag
 
@@ -176,12 +164,10 @@ def field_values(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
 def field_items(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used with ``field_items``.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_items
     >>> from dataclassish.flags import AbstractFlag
 
@@ -204,8 +190,7 @@ def field_items(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
 def replace(flag: type[NoFlag], obj: Any, /, **kwargs: Any) -> Any:  # noqa: ARG001
     """Replace the fields of an object, absent any modifying flags.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import replace
     >>> from dataclassish.flags import NoFlag
 
@@ -222,8 +207,7 @@ def replace(flag: type[NoFlag], obj: Any, /, **kwargs: Any) -> Any:  # noqa: ARG
 def fields(flag: type[NoFlag], obj: Any, /) -> tuple[Field, ...]:  # type: ignore[type-arg]  # noqa: ARG001
     """Return fields of the object, absent any modifying flags.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import fields
     >>> from dataclassish.flags import NoFlag
 
@@ -247,8 +231,7 @@ def asdict(
 ) -> dict[str, Any]:
     """Return the fields as a mapping, absent any modifying flags.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import asdict
     >>> from dataclassish.flags import NoFlag
 
@@ -273,8 +256,7 @@ def astuple(
 ) -> tuple[Any, ...]:
     """Return the fields of an object as a tuple, absent any modifying flags.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import astuple
     >>> from dataclassish.flags import NoFlag
 
@@ -290,8 +272,7 @@ def astuple(
 def field_keys(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG001
     """Return the keys of an object.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_keys
     >>> from dataclassish.flags import NoFlag
 
@@ -307,8 +288,7 @@ def field_keys(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG00
 def field_values(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG001
     """Return the values of an object.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_values
     >>> from dataclassish.flags import NoFlag
 
@@ -324,8 +304,7 @@ def field_values(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG
 def field_items(flag: type[NoFlag], obj: Any, /) -> Iterable[tuple[Any, Any]]:  # noqa: ARG001
     """Return the items of an object.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_items
     >>> from dataclassish.flags import NoFlag
 
@@ -345,13 +324,10 @@ def field_items(flag: type[NoFlag], obj: Any, /) -> Iterable[tuple[Any, Any]]:  
 def replace(_: type[FilterRepr], obj: Any, /, **kwargs: Any) -> Any:
     """Replace the fields of an object, filtering based on repr.
 
-    Raises
-    ------
-    ValueError
-        If a field is in kwargs but has repr=False.
+    Raises:
+        ValueError: If a field is in kwargs but has repr=False.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import replace
     >>> from dataclassish.flags import FilterRepr
 
@@ -393,8 +369,7 @@ def replace(_: type[FilterRepr], obj: Any, /, **kwargs: Any) -> Any:
 def fields(_: type[FilterRepr], obj: Any) -> tuple[Field, ...]:  # type: ignore[type-arg]
     """Return fields of the object, filtering based on repr.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import fields
     >>> from dataclassish.flags import FilterRepr
 
@@ -426,8 +401,7 @@ def asdict(
 ) -> dict[str, Any]:
     """Return the fields as a mapping, filtering based on repr.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import asdict
     >>> from dataclassish.flags import FilterRepr
 
@@ -465,8 +439,7 @@ def astuple(
 ) -> tuple[Any, ...]:
     """Return the fields of an object as a tuple, filtering based on repr.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import astuple
     >>> from dataclassish.flags import FilterRepr
 
@@ -498,13 +471,10 @@ def astuple(
 def get_field(_: type[FilterRepr], obj: Any, field_name: str) -> Any:
     """Get the value of a field from an object, filtering based on repr.
 
-    Raises
-    ------
-    ValueError
-        If the field is repr=False.
+    Raises:
+        ValueError: If the field is repr=False.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import get_field
     >>> from dataclassish.flags import FilterRepr
 
@@ -550,8 +520,7 @@ def get_field(_: type[FilterRepr], obj: Any, field_name: str) -> Any:
 def field_keys(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
     """Return the keys of an object, filtering based on repr.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_keys
     >>> from dataclassish.flags import FilterRepr
 
@@ -583,8 +552,7 @@ def field_keys(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
 def field_values(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
     """Return the values of an object, filtering based on repr.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_values
     >>> from dataclassish.flags import FilterRepr
 
@@ -616,8 +584,7 @@ def field_values(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
 def field_items(_: type[FilterRepr], obj: Any) -> tuple[tuple[Any, Any], ...]:
     """Return the items of an object, filtering based on repr.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_items
     >>> from dataclassish.flags import FilterRepr
 

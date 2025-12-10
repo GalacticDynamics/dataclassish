@@ -24,18 +24,24 @@ def get_field(obj: Any, k: str, /) -> Any:
 
     This default implementation is just to call `getattr`.
 
-    Examples
-    --------
-    >>> from dataclassish import get_field
+    Args:
+        obj: The object from which to get the field.
+        k: The name of the field to retrieve.
 
-    >>> class Point:
-    ...     def __init__(self, x, y):
-    ...         self.x = x
-    ...         self.y = y
+    Returns:
+        The value of the specified field.
 
-    >>> p = Point(1.0, 2.0)
-    >>> get_field(p, "x")
-    1.0
+    Examples:
+        >>> from dataclassish import get_field
+
+        >>> class Point:
+        ...     def __init__(self, x, y):
+        ...         self.x = x
+        ...         self.y = y
+
+        >>> p = Point(1.0, 2.0)
+        >>> get_field(p, "x")
+        1.0
 
     """
     return getattr(obj, k)
@@ -63,19 +69,24 @@ def _recursive_replace_helper(obj: object, k: str, v: Any, /) -> Any:
 def field_keys(obj: Any, /) -> tuple[str, ...]:
     """Yield the field names from the `dataclassish.fields`.
 
-    Examples
-    --------
-    >>> from dataclasses import dataclass
-    >>> from dataclassish import field_keys
+    Args:
+        obj: The object whose field names to retrieve.
 
-    >>> @dataclass
-    ... class Point:
-    ...     x: float
-    ...     y: float
+    Returns:
+        A tuple of field names.
 
-    >>> p = Point(1.0, 2.0)
-    >>> field_keys(p)
-    ('x', 'y')
+    Examples:
+        >>> from dataclasses import dataclass
+        >>> from dataclassish import field_keys
+
+        >>> @dataclass
+        ... class Point:
+        ...     x: float
+        ...     y: float
+
+        >>> p = Point(1.0, 2.0)
+        >>> field_keys(p)
+        ('x', 'y')
 
     """
     return tuple(f.name for f in fields(obj))
@@ -89,17 +100,22 @@ def field_keys(obj: Any, /) -> tuple[str, ...]:
 def field_values(obj: Any, /) -> tuple[Any, ...]:
     """Return the field values from the `dataclassish.fields`.
 
-    Examples
-    --------
-    >>> from dataclasses import dataclass
-    >>> from dataclassish import field_values
+    Args:
+        obj: The object whose field values to retrieve.
 
-    >>> @dataclass
-    ... class Point:
-    ...     x: float
-    ...     y: float
+    Returns:
+        A tuple of field values.
 
-    >>> p = Point(1.0, 2.0)
+    Examples:
+        >>> from dataclasses import dataclass
+        >>> from dataclassish import field_values
+
+        >>> @dataclass
+        ... class Point:
+        ...     x: float
+        ...     y: float
+
+        >>> p = Point(1.0, 2.0)
     >>> field_values(p)
     (1.0, 2.0)
 
@@ -115,19 +131,24 @@ def field_values(obj: Any, /) -> tuple[Any, ...]:
 def field_items(obj: Any) -> tuple[tuple[str, Any], ...]:
     """Return the field names and values from the `dataclassish.fields`.
 
-    Examples
-    --------
-    >>> from dataclasses import dataclass
-    >>> from dataclassish import field_items
+    Args:
+        obj: The object whose field items to retrieve.
 
-    >>> @dataclass
-    ... class Point:
-    ...     x: float
-    ...     y: float
+    Returns:
+        A tuple of (field_name, field_value) pairs.
 
-    >>> p = Point(1.0, 2.0)
-    >>> field_items(p)
-    (('x', 1.0), ('y', 2.0))
+    Examples:
+        >>> from dataclasses import dataclass
+        >>> from dataclassish import field_items
+
+        >>> @dataclass
+        ... class Point:
+        ...     x: float
+        ...     y: float
+
+        >>> p = Point(1.0, 2.0)
+        >>> field_items(p)
+        (('x', 1.0), ('y', 2.0))
 
     """
     return tuple((f.name, getattr(obj, f.name)) for f in fields(obj))

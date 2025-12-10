@@ -127,4 +127,10 @@ class CanCopyReplace(Protocol):
 
         This method should return a new object with the fields replaced.
 
+        Args:
+            **changes: Field names and their new values.
+
+        Returns:
+            A new object with the specified fields replaced.
+
         """

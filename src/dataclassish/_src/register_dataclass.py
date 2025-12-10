@@ -26,8 +26,7 @@ if sys.version_info < (3, 13):
     def get_field(obj: DataclassInstance, k: str, /) -> Any:
         """Get a field of a dataclass instance by name.
 
-        Examples
-        --------
+        Examples:
         >>> from dataclasses import dataclass
         >>> from dataclassish import get_field
 
@@ -53,8 +52,7 @@ if sys.version_info < (3, 13):
     def replace(obj: DataclassInstance, /, **kwargs: Any) -> DataclassInstance:
         """Replace the fields of a dataclass instance.
 
-        Examples
-        --------
+        Examples:
         >>> from dataclasses import dataclass
         >>> from dataclassish import replace
 
@@ -77,8 +75,7 @@ if sys.version_info < (3, 13):
     def replace(obj: DataclassInstance, fs: Mapping[str, Any], /) -> DataclassInstance:
         """Replace the fields of a dataclass instance.
 
-        Examples
-        --------
+        Examples:
         >>> from dataclasses import dataclass
         >>> from dataclassish import replace, F
 
@@ -133,8 +130,7 @@ if sys.version_info < (3, 13):
 def fields(obj: DataclassInstance, /) -> tuple[Field, ...]:  # type: ignore[type-arg]  # TODO: raise issue in beartype
     """Return the fields of a dataclass instance.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclasses import dataclass
     >>> from dataclassish import fields
 
@@ -165,8 +161,7 @@ def asdict(
 ) -> dict[str, Any]:
     """Return the fields of a dataclass instance as a dictionary.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclasses import dataclass
     >>> from dataclassish import asdict
 
@@ -196,8 +191,7 @@ def astuple(
 ) -> tuple[Any, ...]:
     """Return the fields of a dataclass instance as a tuple.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclasses import dataclass
     >>> from dataclassish import astuple
 
