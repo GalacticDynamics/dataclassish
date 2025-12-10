@@ -70,6 +70,6 @@ def field_values(obj: Any, /) -> tuple[Any, ...]:
 
 
 @dispatch.abstract  # type: ignore[misc]
-def field_items(obj: Any) -> tuple[tuple[str, Any], ...]:
+def field_items(obj: Any, /) -> tuple[tuple[str, Any], ...]:
     """Return the field items from the `dataclassish.fields`."""
     raise NotImplementedError  # pragma: no cover
