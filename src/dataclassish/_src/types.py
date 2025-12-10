@@ -1,6 +1,6 @@
 """Data types for ``dataclassish``."""
 
-__all__ = ["DataclassInstance", "CanCopyReplace", "F"]
+__all__ = ("DataclassInstance", "CanCopyReplace", "F")
 
 from dataclasses import dataclass
 from typing import Any, ClassVar, Generic, Protocol, TypeVar, runtime_checkable

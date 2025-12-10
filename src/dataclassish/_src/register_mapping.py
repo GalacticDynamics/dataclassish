@@ -1,6 +1,6 @@
 """Register dispatches for mapping objects."""
 
-__all__: list[str] = []
+__all__: tuple[str, ...] = ()
 
 from collections.abc import Callable, Hashable, ItemsView, KeysView, Mapping, ValuesView
 from dataclasses import Field, field
@@ -13,7 +13,7 @@ from .register_base import _recursive_replace_helper
 # ===================================================================
 
 
-@dispatch(precedence=1)  # type: ignore[misc]
+@dispatch(precedence=1)  # type: ignore[call-overload]
 def get_field(obj: Mapping[Hashable, Any], k: Hashable, /) -> Any:
     """Get a field of a mapping by key.
 
@@ -111,7 +111,7 @@ def replace(
 # Fields
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def fields(obj: Mapping[str, Any], /) -> tuple[Field, ...]:  # type: ignore[type-arg]  # TODO: raise issue in beartype
     """Return the mapping as a tuple of `dataclass.Field` objects.
 
@@ -126,7 +126,7 @@ def fields(obj: Mapping[str, Any], /) -> tuple[Field, ...]:  # type: ignore[type
      Field(name='c',type=<class 'str'>,...))
 
     """
-    fs = tuple(field(kw_only=True) for _ in obj)
+    fs = tuple(field(kw_only=True) for _ in obj)  # pylint: disable=invalid-field-call
     for f, (k, v) in zip(fs, obj.items(), strict=True):
         f.name = k
         f.type = type(v)
@@ -137,7 +137,7 @@ def fields(obj: Mapping[str, Any], /) -> tuple[Field, ...]:  # type: ignore[type
 # Asdict
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def asdict(
     obj: Mapping[Hashable, Any],
     /,
@@ -168,7 +168,7 @@ def asdict(
 # Astuple
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def astuple(
     obj: Mapping[str, Any],
     /,
@@ -193,7 +193,7 @@ def astuple(
 # Field keys
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def field_keys(obj: Mapping[Hashable, Any]) -> KeysView[Hashable]:
     """Return the keys of a mapping.
 
@@ -213,7 +213,7 @@ def field_keys(obj: Mapping[Hashable, Any]) -> KeysView[Hashable]:
 # Field values
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def field_values(obj: Mapping[Any, Any]) -> ValuesView[Any]:
     """Return the values of a mapping.
 
@@ -233,7 +233,7 @@ def field_values(obj: Mapping[Any, Any]) -> ValuesView[Any]:
 # Field items
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def field_items(obj: Mapping[Any, Any]) -> ItemsView[Any, Any]:
     """Return the items of a mapping.
 

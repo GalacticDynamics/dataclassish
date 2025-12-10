@@ -7,7 +7,7 @@ functions. If you need more, check out ``attrs``!
 
 """
 
-__all__ = [
+__all__ = (
     # Converters
     "AbstractConverter",
     "Optional",
@@ -15,7 +15,7 @@ __all__ = [
     # Minimal dataclass implementation
     "dataclass",
     "field",
-]
+)
 
 import dataclasses
 import functools
@@ -168,7 +168,7 @@ _CT = TypeVar("_CT")  # class type
 
 # TODO: how to express default_factory is mutually exclusive with default?
 if sys.version_info < (3, 12):
-    DataclassFieldKwargsNotMetadata = Any
+    DataclassFieldKwargsNotMetadata = Any  # pylint: disable=invalid-name
 
 else:
 
@@ -220,7 +220,7 @@ def field(
         # Add the converter to the metadata
         metadata["converter"] = converter
 
-    return dataclasses.field(metadata=metadata, **kwargs)
+    return dataclasses.field(metadata=metadata, **kwargs)  # pylint: disable=invalid-field-call
 
 
 class DataclassWithConvertersInstance(Protocol):
@@ -242,7 +242,7 @@ def converter_init(
         return
 
     # Bind the arguments to the signature
-    ba = self.__dataclass_init__._obj_signature_.bind_partial(*args, **kwargs)  # type: ignore[attr-defined]
+    ba = self.__dataclass_init__._obj_signature_.bind_partial(*args, **kwargs)  # type: ignore[attr-defined]  # pylint: disable=protected-access
     ba.apply_defaults()  # so eligible for conversion
 
     # Convert the fields, if there's a converter
@@ -304,7 +304,7 @@ def process_dataclass(cls: type[_CT], **dataclass_kwargs: Any) -> type[_CT]:
     # Add the converter init to the class. Also store the signature on the
     # method (Not assigning to __signature__ because that should have `self`).
     dcls.__converter_init__ = converter_init  # type: ignore[attr-defined]
-    dcls.__dataclass_init__._obj_signature_ = sig  # type: ignore[attr-defined]
+    dcls.__dataclass_init__._obj_signature_ = sig  # type: ignore[attr-defined]  # pylint: disable=protected-access
 
     # Assign the init method to the class. If there was a user-defined __init__
     # method, it is restored.

@@ -1,6 +1,6 @@
 """Register dispatches for dataclass objects."""
 
-__all__: list[str] = []
+__all__: tuple[str, ...] = ()
 
 import sys
 from collections.abc import Callable, Mapping
@@ -22,7 +22,7 @@ from .types import DataclassInstance
 
 if sys.version_info < (3, 13):
 
-    @dispatch  # type: ignore[misc]
+    @dispatch
     def get_field(obj: DataclassInstance, k: str, /) -> Any:
         """Get a field of a dataclass instance by name.
 
@@ -129,7 +129,7 @@ if sys.version_info < (3, 13):
 # Fields
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def fields(obj: DataclassInstance, /) -> tuple[Field, ...]:  # type: ignore[type-arg]  # TODO: raise issue in beartype
     """Return the fields of a dataclass instance.
 
@@ -156,7 +156,7 @@ def fields(obj: DataclassInstance, /) -> tuple[Field, ...]:  # type: ignore[type
 # Asdict
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def asdict(
     obj: DataclassInstance,
     /,
@@ -187,7 +187,7 @@ def asdict(
 # Astuple
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def astuple(
     obj: DataclassInstance,
     /,

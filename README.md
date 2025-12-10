@@ -425,7 +425,7 @@ consideration by the functions in `dataclassish`.
 ```pycon
 >>> from dataclassish import flags
 >>> flags.__all__
-['FlagConstructionError', 'AbstractFlag', 'NoFlag', 'FilterRepr']
+('FlagConstructionError', 'AbstractFlag', 'NoFlag', 'FilterRepr')
 
 ```
 

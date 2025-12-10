@@ -40,6 +40,7 @@ Changelog = "https://github.com/GalacticDynamics/dataclassish/releases"
 requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
+
 [dependency-groups]
 dev = [
   "cz-conventional-gitmoji>=0.6.1",
@@ -70,31 +71,28 @@ lint = [
 [tool.hatch]
 version.source = "vcs"
 build.hooks.vcs.version-file = "src/dataclassish/_version.py"
+build.hooks.vcs.version-file-template = """\
+version: str = {version!r}
+version_tuple: tuple[int, int, int] | tuple[int, int, int, str, str]
+version_tuple = {version_tuple!r}
+"""
+
+
+[tool.codespell]
+skip = ["uv.lock"]
 
 
 [tool.commitizen]
 name = "cz_gitmoji"
 
 
-[tool.pytest.ini_options]
-minversion = "8.0"
-addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
-xfail_strict = true
-filterwarnings = [
-  "error",
-]
-log_cli_level = "INFO"
-testpaths = [
-  "README.md", "src", "tests",
-]
-
-
 [tool.coverage]
 run.source = ["dataclassish"]
 report.exclude_also = [
   '\.\.\.',
-  'if typing.TYPE_CHECKING:',
+  'if TYPE_CHECKING:',
 ]
+
 
 [tool.mypy]
 files = ["src"]
@@ -114,6 +112,35 @@ disallow_incomplete_defs = true
 [[tool.mypy.overrides]]
 ignore_missing_imports = true
 module = ["plum.*"]
+
+
+[tool.pylint]
+py-version = "3.11"
+ignore-paths = [".*/_version.py"]
+reports.output-format = "colorized"
+similarities.ignore-imports = "yes"
+disable = [
+  "fixme",
+  "function-redefined",  # incompatible with plum-dispatch
+  "line-too-long",  # handled by ruff
+  "no-member",  # handled by mypy
+  "too-few-public-methods",  # Protocols
+  "too-many-function-args", # incompatible with plum-dispatch
+  "unused-argument", # handled by ruff
+]
+
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = ["-ra", "--showlocals", "--strict-markers", "--strict-config"]
+xfail_strict = true
+filterwarnings = [
+  "error",
+]
+log_cli_level = "INFO"
+testpaths = [
+  "README.md", "src", "tests",
+]
 
 
 [tool.ruff]
@@ -144,7 +171,3 @@ ignore = [
 [tool.ruff.lint.isort]
 combine-as-imports = true
 extra-standard-library = ["typing_extensions"]
-
-
-[tool.codespell]
-skip = ["uv.lock"]

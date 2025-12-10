@@ -21,6 +21,7 @@ def lint(s: nox.Session, /) -> None:
     """Run the linter."""
     s.notify("precommit")
     s.notify("pylint")
+    s.notify("mypy")
 
 
 @session(uv_groups=["lint"], reuse_venv=True)
@@ -33,6 +34,12 @@ def precommit(s: nox.Session, /) -> None:
 def pylint(s: nox.Session, /) -> None:
     """Run PyLint."""
     s.run("pylint", "dataclassish", *s.posargs)
+
+
+@session(uv_groups=["lint"], reuse_venv=True)
+def mypy(s: nox.Session, /) -> None:
+    """Run mypy."""
+    s.run("mypy", "src/dataclassish", *s.posargs)
 
 
 # =============================================================================

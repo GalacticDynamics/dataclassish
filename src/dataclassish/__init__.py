@@ -3,7 +3,7 @@
 dataclassish: dataclass tools, extended by multiple dispatch
 """
 
-__all__ = [
+__all__ = (
     "__version__",
     # Submodules
     "converters",
@@ -21,7 +21,7 @@ __all__ = [
     "DataclassInstance",
     "CanCopyReplace",
     "F",
-]
+)
 
 from . import converters, flags
 from ._src.api import (

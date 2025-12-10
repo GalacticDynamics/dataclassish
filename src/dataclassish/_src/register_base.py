@@ -1,6 +1,6 @@
 """Register dispatches for objects."""
 
-__all__: list[str] = []
+__all__: tuple[str, ...] = ()
 
 from collections.abc import Mapping
 from typing import Any, TypeVar
@@ -10,13 +10,15 @@ from plum import dispatch
 from .api import fields, replace
 from .types import F
 
+# pylint: disable=duplicate-code
+
 K = TypeVar("K")
 V = TypeVar("V")
 
 # ===================================================================
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def get_field(obj: Any, k: str, /) -> Any:
     """Get a field of an object by name.
 
@@ -57,7 +59,7 @@ def _recursive_replace_helper(obj: object, k: str, v: Any, /) -> Any:
 # Field keys
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def field_keys(obj: Any, /) -> tuple[str, ...]:
     """Yield the field names from the `dataclassish.fields`.
 
@@ -83,7 +85,7 @@ def field_keys(obj: Any, /) -> tuple[str, ...]:
 # Field values
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def field_values(obj: Any, /) -> tuple[Any, ...]:
     """Return the field values from the `dataclassish.fields`.
 
@@ -109,7 +111,7 @@ def field_values(obj: Any, /) -> tuple[Any, ...]:
 # Field items
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def field_items(obj: Any) -> tuple[tuple[str, Any], ...]:
     """Return the field names and values from the `dataclassish.fields`.
 

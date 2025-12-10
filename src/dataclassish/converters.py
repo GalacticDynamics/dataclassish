@@ -25,6 +25,6 @@ MyClass(a=None, b='THERE')
 
 """
 
-__all__ = ["AbstractConverter", "Optional", "Unless", "field", "dataclass"]
+__all__ = ("AbstractConverter", "Optional", "Unless", "field", "dataclass")
 
 from ._src.converters import AbstractConverter, Optional, Unless, dataclass, field

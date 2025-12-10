@@ -1,6 +1,6 @@
 """Register dispatches for CanCopyReplace objects."""
 
-__all__: list[str] = []
+__all__: tuple[str, ...] = ()
 
 import copy
 import sys
@@ -16,7 +16,7 @@ from .types import CanCopyReplace
 # Get field
 
 
-@dispatch  # type: ignore[misc]
+@dispatch
 def get_field(obj: CanCopyReplace, k: str, /) -> Any:
     """Get a field of a dataclass instance by name.
 

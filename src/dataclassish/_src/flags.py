@@ -1,6 +1,6 @@
 """flags for ``dataclassish``."""
 
-__all__ = ["FlagConstructionError", "AbstractFlag"]
+__all__ = ("FlagConstructionError", "AbstractFlag")
 
 from typing import Any, final
 
