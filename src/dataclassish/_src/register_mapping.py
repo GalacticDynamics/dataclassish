@@ -13,7 +13,7 @@ from .register_base import _recursive_replace_helper
 # ===================================================================
 
 
-@dispatch(precedence=1)  # type: ignore[call-overload]
+@dispatch(precedence=1)  # type: ignore[call-overload,untyped-decorator]
 def get_field(obj: Mapping[Hashable, Any], k: Hashable, /) -> Any:
     """Get a field of a mapping by key.
 
