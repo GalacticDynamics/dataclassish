@@ -1,6 +1,6 @@
 """Data types for ``dataclassish``."""
 
-__all__ = ["DataclassInstance", "CanCopyReplace", "F"]
+__all__ = ("DataclassInstance", "CanCopyReplace", "F")
 
 from dataclasses import dataclass
 from typing import Any, ClassVar, Generic, Protocol, TypeVar, runtime_checkable
@@ -126,5 +126,11 @@ class CanCopyReplace(Protocol):
         """Replace the fields of the object.
 
         This method should return a new object with the fields replaced.
+
+        Args:
+            **changes: Field names and their new values.
+
+        Returns:
+            A new object with the specified fields replaced.
 
         """

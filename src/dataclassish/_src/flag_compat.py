@@ -1,40 +1,29 @@
 """flags for ``dataclassish``."""
 
-__all__: list[str] = []
+__all__: tuple[str, ...] = ()
 
-from collections.abc import Callable, Iterable
+from collections.abc import Iterable
 from dataclasses import Field
 from typing import Any, cast
 from typing_extensions import Never
 
 from plum import dispatch
 
-from .api import (
-    asdict,
-    astuple,
-    field_items,
-    field_keys,
-    field_values,
-    fields,
-    get_field,
-    replace,
-)
+from . import api
 from .flags import AbstractFlag, FilterRepr, NoFlag
 
 # ===================================================================
 # AbstractFlag
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch
 def replace(flag: type[AbstractFlag], _: Any, /, **__: Any) -> Never:  # noqa: ARG001
     """Raise an error if given an AbstractFlag when replacing.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import replace
     >>> from dataclassish.flags import AbstractFlag
 
@@ -49,16 +38,14 @@ def replace(flag: type[AbstractFlag], _: Any, /, **__: Any) -> Never:  # noqa: A
     raise ValueError(msg)
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch
 def fields(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used to get fields.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import fields
     >>> from dataclassish.flags import AbstractFlag
 
@@ -73,22 +60,20 @@ def fields(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     raise ValueError(msg)
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch
 def asdict(
     flag: type[AbstractFlag],  # noqa: ARG001
     _: Any,
     /,
     *,
-    dict_factory: Callable[[list[tuple[str, Any]]], dict[str, Any]] = dict,  # noqa: ARG001
+    dict_factory: api.DictFactory = dict,  # noqa: ARG001
 ) -> Never:
     """Raise an error if an AbstractFlag is used with ``asdict``.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import asdict
     >>> from dataclassish.flags import AbstractFlag
 
@@ -103,22 +88,20 @@ def asdict(
     raise ValueError(msg)
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch
 def astuple(
     flag: type[AbstractFlag],  # noqa: ARG001
     _: Any,
     /,
     *,
-    tuple_factory: Callable[[Any], tuple[Any, ...]] = tuple,  # noqa: ARG001
+    tuple_factory: api.TupleFactory = tuple,  # noqa: ARG001
 ) -> Never:
     """Raise an error if an AbstractFlag is used with ``asdict``.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import astuple
     >>> from dataclassish.flags import AbstractFlag
 
@@ -133,16 +116,14 @@ def astuple(
     raise ValueError(msg)
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch
 def field_keys(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used with ``field_keys``.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_keys
     >>> from dataclassish.flags import AbstractFlag
 
@@ -157,16 +138,14 @@ def field_keys(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     raise ValueError(msg)
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch
 def field_values(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used with ``field_values``.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_values
     >>> from dataclassish.flags import AbstractFlag
 
@@ -181,16 +160,14 @@ def field_values(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     raise ValueError(msg)
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch
 def field_items(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used with ``field_items``.
 
-    Raises
-    ------
-    ValueError
+    Raises:
+        ValueError
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_items
     >>> from dataclassish.flags import AbstractFlag
 
@@ -209,12 +186,11 @@ def field_items(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
 # NoFlag
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def replace(flag: type[NoFlag], obj: Any, /, **kwargs: Any) -> Any:  # noqa: ARG001
     """Replace the fields of an object, absent any modifying flags.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import replace
     >>> from dataclassish.flags import NoFlag
 
@@ -224,15 +200,14 @@ def replace(flag: type[NoFlag], obj: Any, /, **kwargs: Any) -> Any:  # noqa: ARG
     {'x': 3.0, 'y': 2.0}
 
     """
-    return replace(obj, **kwargs)
+    return api.replace(obj, **kwargs)
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def fields(flag: type[NoFlag], obj: Any, /) -> tuple[Field, ...]:  # type: ignore[type-arg]  # noqa: ARG001
     """Return fields of the object, absent any modifying flags.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import fields
     >>> from dataclassish.flags import NoFlag
 
@@ -243,21 +218,20 @@ def fields(flag: type[NoFlag], obj: Any, /) -> tuple[Field, ...]:  # type: ignor
      Field(name='c',type=<class 'str'>,...))
 
     """
-    return cast("tuple[Field, ...]", fields(obj))  # type: ignore[type-arg]
+    return cast("tuple[Field, ...]", api.fields(obj))  # type: ignore[type-arg]
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def asdict(
     flag: type[NoFlag],  # noqa: ARG001
     obj: Any,
     /,
     *,
-    dict_factory: Callable[[list[tuple[str, Any]]], dict[str, Any]] = dict,
+    dict_factory: api.DictFactory = dict,
 ) -> dict[str, Any]:
     """Return the fields as a mapping, absent any modifying flags.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import asdict
     >>> from dataclassish.flags import NoFlag
 
@@ -269,21 +243,20 @@ def asdict(
     False
 
     """
-    return cast("dict[str, Any]", asdict(obj, dict_factory=dict_factory))
+    return cast("dict[str, Any]", api.asdict(obj, dict_factory=dict_factory))
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def astuple(
     flag: type[NoFlag],  # noqa: ARG001
     obj: Any,
     /,
     *,
-    tuple_factory: Callable[[Any], tuple[Any, ...]] = tuple,
+    tuple_factory: api.TupleFactory = tuple,
 ) -> tuple[Any, ...]:
     """Return the fields of an object as a tuple, absent any modifying flags.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import astuple
     >>> from dataclassish.flags import NoFlag
 
@@ -292,15 +265,14 @@ def astuple(
     (1, 2.0, '3')
 
     """
-    return cast("tuple[Any, ...]", astuple(obj, tuple_factory=tuple_factory))
+    return cast("tuple[Any, ...]", api.astuple(obj, tuple_factory=tuple_factory))
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def field_keys(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG001
     """Return the keys of an object.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_keys
     >>> from dataclassish.flags import NoFlag
 
@@ -309,15 +281,14 @@ def field_keys(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG00
     dict_keys(['a', 'b', 'c'])
 
     """
-    return cast("Iterable[Any]", field_keys(obj))
+    return cast("Iterable[Any]", api.field_keys(obj))
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def field_values(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG001
     """Return the values of an object.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_values
     >>> from dataclassish.flags import NoFlag
 
@@ -326,15 +297,14 @@ def field_values(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG
     dict_values([1, 2.0, '3'])
 
     """
-    return cast("Iterable[Any]", field_values(obj))
+    return cast("Iterable[Any]", api.field_values(obj))
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def field_items(flag: type[NoFlag], obj: Any, /) -> Iterable[tuple[Any, Any]]:  # noqa: ARG001
     """Return the items of an object.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_items
     >>> from dataclassish.flags import NoFlag
 
@@ -343,24 +313,21 @@ def field_items(flag: type[NoFlag], obj: Any, /) -> Iterable[tuple[Any, Any]]:  
     dict_items([('a', 1), ('b', 2.0), ('c', '3')])
 
     """
-    return cast("Iterable[tuple[Any, Any]]", field_items(obj))
+    return cast("Iterable[tuple[Any, Any]]", api.field_items(obj))
 
 
 # ===================================================================
 # FilterRepr
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def replace(_: type[FilterRepr], obj: Any, /, **kwargs: Any) -> Any:
     """Replace the fields of an object, filtering based on repr.
 
-    Raises
-    ------
-    ValueError
-        If a field is in kwargs but has repr=False.
+    Raises:
+        ValueError: If a field is in kwargs but has repr=False.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import replace
     >>> from dataclassish.flags import FilterRepr
 
@@ -388,20 +355,21 @@ def replace(_: type[FilterRepr], obj: Any, /, **kwargs: Any) -> Any:
 
     """
     # Determine if any changes are
-    fs_in_kw_but_repr = [f.name for f in fields(obj) if f.name in kwargs if not f.repr]
+    fs_in_kw_but_repr = [
+        f.name for f in api.fields(obj) if f.name in kwargs if not f.repr
+    ]
     if fs_in_kw_but_repr:
         msg = f"Fields {fs_in_kw_but_repr} are in kwargs but are repr=False."
         raise ValueError(msg)
 
-    return replace(obj, **kwargs)
+    return api.replace(obj, **kwargs)
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def fields(_: type[FilterRepr], obj: Any) -> tuple[Field, ...]:  # type: ignore[type-arg]
     """Return fields of the object, filtering based on repr.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import fields
     >>> from dataclassish.flags import FilterRepr
 
@@ -424,21 +392,16 @@ def fields(_: type[FilterRepr], obj: Any) -> tuple[Field, ...]:  # type: ignore[
     (Field(name='x',...), Field(name='y',...))
 
     """
-    return tuple(f for f in fields(obj) if f.repr)
+    return tuple(f for f in api.fields(obj) if f.repr)
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def asdict(
-    flag: type[FilterRepr],
-    obj: Any,
-    /,
-    *,
-    dict_factory: Callable[[list[tuple[str, Any]]], dict[str, Any]] = dict,
+    flag: type[FilterRepr], obj: Any, /, *, dict_factory: api.DictFactory = dict
 ) -> dict[str, Any]:
     """Return the fields as a mapping, filtering based on repr.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import asdict
     >>> from dataclassish.flags import FilterRepr
 
@@ -461,23 +424,22 @@ def asdict(
     {'x': 1.0, 'y': 2.0}
 
     """
-    all_dict = asdict(obj)
-    keep_keys = field_keys(flag, obj)
+    all_dict = api.asdict(obj)
+    keep_keys = api.field_keys(flag, obj)
     return dict_factory([(k, all_dict[k]) for k in keep_keys])
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def astuple(
     _: type[FilterRepr],
     obj: Any,
     /,
     *,
-    tuple_factory: Callable[[Any], tuple[Any, ...]] = tuple,
+    tuple_factory: api.TupleFactory = tuple,
 ) -> tuple[Any, ...]:
     """Return the fields of an object as a tuple, filtering based on repr.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import astuple
     >>> from dataclassish.flags import FilterRepr
 
@@ -500,22 +462,19 @@ def astuple(
     (1.0, 2.0)
 
     """
-    tup = astuple(obj)
-    keep = [f.repr for f in fields(obj)]
+    tup = api.astuple(obj)
+    keep = [f.repr for f in api.fields(obj)]
     return tuple_factory([x for x, cond in zip(tup, keep, strict=True) if cond])
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch
 def get_field(_: type[FilterRepr], obj: Any, field_name: str) -> Any:
     """Get the value of a field from an object, filtering based on repr.
 
-    Raises
-    ------
-    ValueError
-        If the field is repr=False.
+    Raises:
+        ValueError: If the field is repr=False.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import get_field
     >>> from dataclassish.flags import FilterRepr
 
@@ -546,7 +505,7 @@ def get_field(_: type[FilterRepr], obj: Any, field_name: str) -> Any:
     1.0
 
     """
-    f = [f.repr for f in fields(obj) if f.name == field_name]
+    f = [f.repr for f in api.fields(obj) if f.name == field_name]
     if not f:
         msg = f"Field {field_name} not found."
         raise ValueError(msg)
@@ -554,15 +513,14 @@ def get_field(_: type[FilterRepr], obj: Any, field_name: str) -> Any:
         msg = f"Field {field_name} is repr=False."
         raise ValueError(msg)
 
-    return get_field(obj, field_name)
+    return api.get_field(obj, field_name)
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def field_keys(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
     """Return the keys of an object, filtering based on repr.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_keys
     >>> from dataclassish.flags import FilterRepr
 
@@ -585,15 +543,16 @@ def field_keys(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
     ('x', 'y')
 
     """
-    return tuple(k for k, f in zip(field_keys(obj), fields(obj), strict=True) if f.repr)
+    return tuple(
+        k for k, f in zip(api.field_keys(obj), api.fields(obj), strict=True) if f.repr
+    )
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def field_values(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
     """Return the values of an object, filtering based on repr.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_values
     >>> from dataclassish.flags import FilterRepr
 
@@ -617,16 +576,15 @@ def field_values(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
 
     """
     return tuple(
-        v for v, f in zip(field_values(obj), fields(obj), strict=True) if f.repr
+        v for v, f in zip(api.field_values(obj), api.fields(obj), strict=True) if f.repr
     )
 
 
-@dispatch  # type: ignore[misc, no-redef]
+@dispatch  # type: ignore[no-redef]
 def field_items(_: type[FilterRepr], obj: Any) -> tuple[tuple[Any, Any], ...]:
     """Return the items of an object, filtering based on repr.
 
-    Examples
-    --------
+    Examples:
     >>> from dataclassish import field_items
     >>> from dataclassish.flags import FilterRepr
 
@@ -651,6 +609,6 @@ def field_items(_: type[FilterRepr], obj: Any) -> tuple[tuple[Any, Any], ...]:
     """
     return tuple(
         (k, v)
-        for (k, v), f in zip(field_items(obj), fields(obj), strict=True)
+        for (k, v), f in zip(api.field_items(obj), api.fields(obj), strict=True)
         if f.repr
     )

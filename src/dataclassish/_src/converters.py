@@ -7,7 +7,7 @@ functions. If you need more, check out ``attrs``!
 
 """
 
-__all__ = [
+__all__ = (
     # Converters
     "AbstractConverter",
     "Optional",
@@ -15,7 +15,7 @@ __all__ = [
     # Minimal dataclass implementation
     "dataclass",
     "field",
-]
+)
 
 import dataclasses
 import functools
@@ -168,7 +168,7 @@ _CT = TypeVar("_CT")  # class type
 
 # TODO: how to express default_factory is mutually exclusive with default?
 if sys.version_info < (3, 12):
-    DataclassFieldKwargsNotMetadata = Any
+    DataclassFieldKwargsNotMetadata = Any  # pylint: disable=invalid-name
 
 else:
 
@@ -192,16 +192,15 @@ def field(
 ) -> Any:
     """Dataclass field with a converter argument.
 
-    Parameters
-    ----------
-    converter : callable, optional
-        A callable that converts the value of the field. This is added to the
-        metadata of the field.
-    metadata : Mapping[Hashable, Any], optional
-        Additional metadata to add to the field.
-        See `dataclasses.field` for more information.
-    **kwargs : Any
-        Additional keyword arguments to pass to `dataclasses.field`.
+    Args:
+        converter: A callable that converts the value of the field. This is
+            added to the metadata of the field.
+        metadata: Additional metadata to add to the field.
+            See `dataclasses.field` for more information.
+        **kwargs: Additional keyword arguments to pass to `dataclasses.field`.
+
+    Returns:
+        A dataclass field with the converter in its metadata.
 
     """
     if converter is not None:
@@ -220,10 +219,12 @@ def field(
         # Add the converter to the metadata
         metadata["converter"] = converter
 
-    return dataclasses.field(metadata=metadata, **kwargs)
+    return dataclasses.field(metadata=metadata, **kwargs)  # pylint: disable=invalid-field-call
 
 
 class DataclassWithConvertersInstance(Protocol):
+    """DataclassInstance Protocol with additional ``__converter_init__``."""
+
     __dataclass_fields__: ClassVar[dict[str, dataclasses.Field[Any]]]
     __dataclass_init__: Callable[..., None]
     __converter_init__: Callable[..., None]
@@ -236,13 +237,34 @@ def converter_init(
     *,
     _skip_convert: bool = False,
 ) -> None:
+    """Dataclass `__init__` method that applies converters.
+
+    This function processes the arguments provided to a dataclass constructor,
+    applying any converters specified in the field metadata before delegating
+    to the standard dataclass ``__init__`` method.
+
+    Args:
+        self: The dataclass instance being initialized.
+        args: Positional arguments passed to the constructor.
+        kwargs: Keyword arguments passed to the constructor.
+        _skip_convert: If True, bypasses converter application and directly
+            calls the dataclass ``__init__``. This provides a fast path when
+            input values are already converted. Defaults to False.
+
+    Note:
+        This function expects the instance to have a ``__dataclass_init__``
+        attribute containing the original dataclass-generated ``__init__``
+        method, and that this method has an ``_obj_signature_`` attribute
+        with the signature of the constructor (without the ``self`` parameter).
+
+    """
     # Fast path: no conversion
     if _skip_convert:
         self.__dataclass_init__(*args, **kwargs)
         return
 
     # Bind the arguments to the signature
-    ba = self.__dataclass_init__._obj_signature_.bind_partial(*args, **kwargs)  # type: ignore[attr-defined]
+    ba = self.__dataclass_init__._obj_signature_.bind_partial(*args, **kwargs)  # type: ignore[attr-defined]  # pylint: disable=protected-access
     ba.apply_defaults()  # so eligible for conversion
 
     # Convert the fields, if there's a converter
@@ -262,16 +284,12 @@ def converter_init(
 def process_dataclass(cls: type[_CT], **dataclass_kwargs: Any) -> type[_CT]:
     """Process a class into a dataclass with converters.
 
-    Parameters
-    ----------
-    cls : type
-        The class to transform into a dataclass.
-    **dataclass_kwargs : Any
-        Additional keyword arguments to pass to `dataclasses.dataclass`.
+    Args:
+        cls: The class to transform into a dataclass.
+        **dataclass_kwargs: Additional keyword arguments to pass to
+            `dataclasses.dataclass`.
 
-    Returns
-    -------
-    type[DataclassInstance]
+    Returns:
         The dataclass, it's a transformed version of the input class `cls`. This
         also adds the argument ``_skip_convert`` to the `__init__` method, which
         allows for skipping the conversion of fields. This provides a fast path
@@ -304,7 +322,7 @@ def process_dataclass(cls: type[_CT], **dataclass_kwargs: Any) -> type[_CT]:
     # Add the converter init to the class. Also store the signature on the
     # method (Not assigning to __signature__ because that should have `self`).
     dcls.__converter_init__ = converter_init  # type: ignore[attr-defined]
-    dcls.__dataclass_init__._obj_signature_ = sig  # type: ignore[attr-defined]
+    dcls.__dataclass_init__._obj_signature_ = sig  # type: ignore[attr-defined]  # pylint: disable=protected-access
 
     # Assign the init method to the class. If there was a user-defined __init__
     # method, it is restored.
@@ -362,51 +380,51 @@ def dataclass(
     replaced. It is up to the user to ensure that the `__init__` method calls
     the `__converter_init__` method.
 
-    Parameters
-    ----------
-    cls : type | None, optional
-        The class to transform into a dataclass. If `None`, `dataclass` returns
-        a partial function that can be used as a decorator.
-    **kwargs : Any
-        Additional keyword arguments to pass to `dataclasses.dataclass`.
+    Args:
+        cls: The class to transform into a dataclass. If `None`, `dataclass`
+            returns a partial function that can be used as a decorator.
+        **kwargs: Additional keyword arguments to pass to `dataclasses.dataclass`.
 
-    Examples
-    --------
-    >>> from dataclassish.converters import Optional
-    >>> from dataclassish._src.converters import dataclass, field
+    Returns:
+        The transformed dataclass if `cls` is provided, otherwise a decorator
+        function.
 
-    >>> @dataclass
-    ... class Foo:
-    ...     attr: int | None = field(default=2.0, converter=Optional(int))
+    Examples:
+        >>> from dataclassish.converters import Optional
+        >>> from dataclassish._src.converters import dataclass, field
 
-    The converter is applied to the default value:
+        >>> @dataclass
+        ... class Foo:
+        ...     attr: int | None = field(default=2.0, converter=Optional(int))
 
-    >>> Foo().attr
-    2
+        The converter is applied to the default value:
 
-    The converter is applied to the input value:
+        >>> Foo().attr
+        2
 
-    >>> Foo(None).attr is None
-    True
+        The converter is applied to the input value:
 
-    >>> Foo(1).attr
-    1
+        >>> Foo(None).attr is None
+        True
 
-    And will work for any input value that the converter can handle, e.g.
-    ``int(str)``:
+        >>> Foo(1).attr
+        1
 
-    >>> Foo("3").attr
-    3
+        And will work for any input value that the converter can handle, e.g.
+        ``int(str)``:
 
-    If there already is a user-defined `__init__` method, it will not be
-    replaced. It is up to the user to ensure that the `__init__` method calls
-    the `__converter_init__` method.
+        >>> Foo("3").attr
+        3
 
-    >>> @dataclass
-    ... class Bar:
-    ...     attr: int | None = field(default=2.0, converter=Optional(int))
-    ...     def __init__(self, *, other_name: int | None) -> None:
-    ...         self.__converter_init__((), {"attr": other_name})
+        If there already is a user-defined `__init__` method, it will not be
+        replaced. It is up to the user to ensure that the `__init__` method calls
+        the `__converter_init__` method.
+
+        >>> @dataclass
+        ... class Bar:
+        ...     attr: int | None = field(default=2.0, converter=Optional(int))
+        ...     def __init__(self, *, other_name: int | None) -> None:
+        ...         self.__converter_init__((), {"attr": other_name})
 
     """
     if cls is None:
