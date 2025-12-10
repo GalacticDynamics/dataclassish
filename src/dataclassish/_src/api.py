@@ -1,5 +1,6 @@
 """API for functions in Dataclassish."""
 
+# pylint: disable=duplicate-code
 __all__ = (
     # Dataclass API
     "replace",
@@ -12,6 +13,7 @@ __all__ = (
     "field_values",
     "field_items",
 )
+# pylint: enable=duplicate-code
 
 from collections.abc import Callable, Hashable
 from dataclasses import Field
