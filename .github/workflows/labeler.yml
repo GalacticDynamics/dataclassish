@@ -22,12 +22,15 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            // Get repository labels and build emoji-to-label map
-            const { data: repoLabels } = await github.rest.issues.listLabelsForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              per_page: 100
-            });
+            // Get all repository labels (with pagination) and build emoji-to-label map
+            const repoLabels = await github.paginate(
+              github.rest.issues.listLabelsForRepo,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 100,
+              }
+            );
 
             const labelMap = {};
             for (const label of repoLabels) {
