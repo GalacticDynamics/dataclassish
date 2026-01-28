@@ -18,7 +18,6 @@ __all__ = (
     "field_values",
     "field_items",
     # Classes
-    "DataclassInstance",
     "F",
 )
 
@@ -33,7 +32,7 @@ from ._src.api import (
     get_field,
     replace,
 )
-from ._src.types import DataclassInstance, F
+from ._src.types import F
 from ._version import version as __version__
 
 # Register dispatches by importing the submodules

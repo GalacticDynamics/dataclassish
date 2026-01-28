@@ -13,17 +13,17 @@ from dataclasses import (
 )
 from typing import Any
 
+import optype as opt
 from plum import dispatch
 
 from .register_base import _recursive_replace_helper
-from .types import DataclassInstance
 
 # ===================================================================
 
 if sys.version_info < (3, 13):
 
     @dispatch
-    def get_field(obj: DataclassInstance, k: str, /) -> Any:
+    def get_field(obj: opt.dataclasses.HasDataclassFields, k: str, /) -> Any:
         """Get a field of a dataclass instance by name.
 
         Examples:
@@ -49,7 +49,9 @@ if sys.version_info < (3, 13):
 if sys.version_info < (3, 13):
 
     @dispatch
-    def replace(obj: DataclassInstance, /, **kwargs: Any) -> DataclassInstance:
+    def replace(
+        obj: opt.dataclasses.HasDataclassFields, /, **kwargs: Any
+    ) -> opt.dataclasses.HasDataclassFields:
         """Replace the fields of a dataclass instance.
 
         Examples:
@@ -72,7 +74,9 @@ if sys.version_info < (3, 13):
         return _dataclass_replace(obj, **kwargs)
 
     @dispatch  # type: ignore[no-redef]
-    def replace(obj: DataclassInstance, fs: Mapping[str, Any], /) -> DataclassInstance:
+    def replace(
+        obj: opt.dataclasses.HasDataclassFields, fs: Mapping[str, Any], /
+    ) -> opt.dataclasses.HasDataclassFields:
         """Replace the fields of a dataclass instance.
 
         Examples:
@@ -127,7 +131,7 @@ if sys.version_info < (3, 13):
 
 
 @dispatch
-def fields(obj: DataclassInstance, /) -> tuple[Field, ...]:  # type: ignore[type-arg]  # TODO: raise issue in beartype
+def fields(obj: opt.dataclasses.HasDataclassFields, /) -> tuple[Field, ...]:  # type: ignore[type-arg]  # TODO: raise issue in beartype
     """Return the fields of a dataclass instance.
 
     Examples:
@@ -154,7 +158,7 @@ def fields(obj: DataclassInstance, /) -> tuple[Field, ...]:  # type: ignore[type
 
 @dispatch
 def asdict(
-    obj: DataclassInstance,
+    obj: opt.dataclasses.HasDataclassFields,
     /,
     *,
     dict_factory: Callable[[list[tuple[str, Any]]], dict[str, Any]] = dict,
@@ -184,7 +188,7 @@ def asdict(
 
 @dispatch
 def astuple(
-    obj: DataclassInstance,
+    obj: opt.dataclasses.HasDataclassFields,
     /,
     *,
     tuple_factory: Callable[[Any], tuple[Any, ...]] = tuple,
