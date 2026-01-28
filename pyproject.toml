@@ -17,7 +17,11 @@ classifiers = [
   "Topic :: Scientific/Engineering",
   "Typing :: Typed",
 ]
-dependencies = ["plum-dispatch>=2.5.1", "typing_extensions>=4.12.2"]
+dependencies = [
+  "optype>=0.16.0",
+  "plum-dispatch>=2.5.1",
+  "typing_extensions>=4.12.2",
+]
 description = "dataclass tools, extended by multiple dispatch"
 dynamic = ["version"]
 license.file = "LICENSE"
