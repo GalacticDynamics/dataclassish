@@ -1,4 +1,4 @@
-"""Register dispatches for CanCopyReplace objects."""
+"""Register dispatches for CanReplace objects."""
 
 __all__: tuple[str, ...] = ()
 
@@ -7,17 +7,17 @@ import sys
 from collections.abc import Mapping
 from typing import Any
 
+import optype as opt
 from plum import dispatch
 
 from .register_base import _recursive_replace_helper
-from .types import CanCopyReplace
 
 # ===================================================================
 # Get field
 
 
 @dispatch
-def get_field(obj: CanCopyReplace, k: str, /) -> Any:
+def get_field(obj: opt.copy.CanReplaceSelf, k: str, /) -> Any:
     """Get a field of a dataclass instance by name.
 
     Examples:
@@ -65,7 +65,7 @@ def get_field(obj: CanCopyReplace, k: str, /) -> Any:
 
 
 @dispatch
-def replace(obj: CanCopyReplace, /, **kwargs: Any) -> CanCopyReplace:
+def replace(obj: opt.copy.CanReplaceSelf, /, **kwargs: Any) -> opt.copy.CanReplaceSelf:
     """Replace the fields of an object.
 
     Examples:
@@ -133,7 +133,9 @@ def replace(obj: CanCopyReplace, /, **kwargs: Any) -> CanCopyReplace:
 
 
 @dispatch  # type: ignore[no-redef]
-def replace(obj: CanCopyReplace, fs: Mapping[str, Any], /) -> CanCopyReplace:
+def replace(
+    obj: opt.copy.CanReplaceSelf, fs: Mapping[str, Any], /
+) -> opt.copy.CanReplaceSelf:
     """Replace the fields of a dataclass instance.
 
     Examples:
