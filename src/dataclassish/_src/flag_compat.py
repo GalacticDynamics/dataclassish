@@ -4,8 +4,7 @@ __all__: tuple[str, ...] = ()
 
 from collections.abc import Iterable
 from dataclasses import Field
-from typing import Any, cast
-from typing_extensions import Never
+from typing import Any, Never, cast
 
 from plum import dispatch
 

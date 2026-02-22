@@ -27,13 +27,14 @@ from typing import (
     Any,
     ClassVar,
     Generic,
+    NotRequired,
     Protocol,
     TypedDict,
     TypeVar,
     cast,
     overload,
 )
-from typing_extensions import NotRequired, dataclass_transform
+from typing_extensions import dataclass_transform
 
 ArgT = TypeVar("ArgT")  # Input type
 RetT = TypeVar("RetT")  # Return type
