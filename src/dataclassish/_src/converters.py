@@ -224,7 +224,7 @@ def field(
 
 
 class DataclassWithConvertersInstance(Protocol):
-    """DataclassInstance Protocol with additional ``__converter_init__``."""
+    """Dataclass instance Protocol with additional ``__converter_init__``."""
 
     __dataclass_fields__: ClassVar[dict[str, dataclasses.Field[Any]]]
     __dataclass_init__: Callable[..., None]
