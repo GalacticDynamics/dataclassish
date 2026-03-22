@@ -52,12 +52,12 @@ dev = [
 ]
 lint = ["mypy>=1.19.0", "pre-commit>=4.5.0", "pylint>=4.0.4"]
 nox = ["nox>=2024.10.9", "nox-uv>=0.6.3"]
-test = [
-  "attrs>=25.4.0",
-  "pytest>=8.4.2",
-  "pytest-codspeed>=5.0.0",
-  "pytest-cov>=7.0.0",
-  "sybil[pytest]>=9.2.0",
+test = ["pytest>=9.0.0", "pytest-codspeed>=5.0.0", "sybil[pytest]>=9.2.0"]
+test_cov = [{ "include-group" = "test" }, "pytest-cov>=4.0.0", "attrs>=25.4.0"]
+test_mutation = [
+  { "include-group" = "test" },
+  "pytest-gremlins>=1.5.1",     # fails if `pytest-cov` is installed
+  "pytest-xdist>=3.8.0",
 ]
 
 [tool.hatch]
