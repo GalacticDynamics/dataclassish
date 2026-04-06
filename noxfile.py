@@ -1,4 +1,3 @@
-#!/usr/bin/env -S uv run --script  # noqa: EXE001
 # /// script
 #    dependencies = ["nox", "nox_uv"]
 # ///
