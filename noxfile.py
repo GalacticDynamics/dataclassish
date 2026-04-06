@@ -1,4 +1,3 @@
-#!/usr/bin/env -S uv run --script
 # /// script
 #    dependencies = ["nox", "nox_uv"]
 # ///
