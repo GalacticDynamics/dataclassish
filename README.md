@@ -9,6 +9,7 @@
 <p align="center">
     <a href="https://github.com/GalacticDynamics/dataclassish/actions"> <img alt="CI status" src="https://github.com/GalacticDynamics/dataclassish/workflows/CI/badge.svg" /> </a>
     <a href="https://codecov.io/gh/GalacticDynamics/dataclassish"> <img alt="codecov" src="https://codecov.io/gh/GalacticDynamics/dataclassish/graph/badge.svg" /> </a>
+    <a href="https://app.codspeed.io/GalacticDynamics/dataclassish?utm_source=badge"><img alt="CodSpeed" src="https://img.shields.io/endpoint?url=https://codspeed.io/badge.json" /> </a>
     <a href="https://scientific-python.org/specs/spec-0000/"> <img alt="ruff" src="https://img.shields.io/badge/SPEC-0-green?labelColor=%23004811&color=%235CA038" /> </a>
     <a href="https://docs.astral.sh/ruff/"> <img alt="ruff" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json" /> </a>
     <a href="https://pre-commit.com"> <img alt="pre-commit" src="https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit" /> </a>
