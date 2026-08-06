@@ -66,7 +66,17 @@ def pytest_gremlins(s: nox.Session, /) -> None:
     """Run pytest-gremlins (without coverage, which conflicts with gremlins)."""
     # Filter out --cov from posargs since it conflicts with gremlins
     filtered_args = [arg for arg in s.posargs if not arg.startswith("--cov")]
-    s.run("pytest", "--gremlins", "tests", *filtered_args)
+    s.run(
+        "pytest",
+        "--gremlins",
+        "tests",
+        # pytest-gremlins' own coverage teardown emits a benign
+        # CoverageWarning; the project's `filterwarnings = ["error"]`
+        # would otherwise turn it into a crash.
+        "-W",
+        "ignore::coverage.exceptions.CoverageWarning",
+        *filtered_args,
+    )
 
 
 # =============================================================================
