@@ -92,8 +92,8 @@ jobs:
   status:
     name: CI Pass
     runs-on: ubuntu-latest
+    if: ${{ !cancelled() }}
     needs: [format, tests, test_oldest]
-    if: always()
     steps:
       - name: All required jobs passed
         uses: re-actors/alls-green@release/v1
