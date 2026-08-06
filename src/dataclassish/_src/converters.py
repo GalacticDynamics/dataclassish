@@ -20,7 +20,6 @@ __all__ = (
 import dataclasses
 import functools
 import inspect
-import sys
 from abc import ABCMeta, abstractmethod
 from collections.abc import Callable, Hashable, Mapping
 from typing import (
@@ -31,6 +30,7 @@ from typing import (
     Protocol,
     TypedDict,
     TypeVar,
+    Unpack,
     cast,
     overload,
 )
@@ -168,28 +168,22 @@ _CT = TypeVar("_CT")  # class type
 
 
 # TODO: how to express default_factory is mutually exclusive with default?
-if sys.version_info < (3, 12):
-    DataclassFieldKwargsNotMetadata = Any  # pylint: disable=invalid-name
+class DataclassFieldKwargsNotMetadata(TypedDict):
+    """Keyword arguments for `dataclasses.field`."""
 
-else:
-
-    class DataclassFieldKwargsNotMetadata(TypedDict):
-        """Keyword arguments for `dataclasses.field`."""
-
-        default: NotRequired[object]
-        init: NotRequired[bool]
-        repr: NotRequired[bool]
-        hash: NotRequired[bool | None]
-        compare: NotRequired[bool]
-        kw_only: NotRequired[bool]
-        metadata: NotRequired[Mapping[Hashable, Any]]
+    default: NotRequired[object]
+    init: NotRequired[bool]
+    repr: NotRequired[bool]
+    hash: NotRequired[bool | None]
+    compare: NotRequired[bool]
+    kw_only: NotRequired[bool]
 
 
 def field(
     *,
     converter: Callable[[Any], Any] | None = None,
     metadata: Mapping[Hashable, Any] | None = None,
-    **kwargs: DataclassFieldKwargsNotMetadata,
+    **kwargs: Unpack[DataclassFieldKwargsNotMetadata],
 ) -> Any:
     """Dataclass field with a converter argument.
 
