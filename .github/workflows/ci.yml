@@ -92,7 +92,7 @@ jobs:
   status:
     name: CI Pass
     runs-on: ubuntu-latest
-    if: ${{ always() && !cancelled() }}
+    if: ${{ !cancelled() }}
     needs: [format, tests, test_oldest]
     steps:
       - name: All required jobs passed
