@@ -20,7 +20,6 @@ __all__ = (
 import dataclasses
 import functools
 import inspect
-import sys
 from abc import ABCMeta, abstractmethod
 from collections.abc import Callable, Hashable, Mapping
 from typing import (
@@ -31,6 +30,7 @@ from typing import (
     Protocol,
     TypedDict,
     TypeVar,
+    Unpack,
     cast,
     overload,
 )
@@ -168,28 +168,28 @@ _CT = TypeVar("_CT")  # class type
 
 
 # TODO: how to express default_factory is mutually exclusive with default?
-if sys.version_info < (3, 12):
-    DataclassFieldKwargsNotMetadata = Any  # pylint: disable=invalid-name
+class DataclassFieldKwargsNotMetadata(TypedDict):
+    """Keyword arguments for `dataclasses.field`, excluding ``metadata``.
 
-else:
+    ``metadata`` is deliberately omitted: `field` already has it as an
+    explicit named parameter, and PEP 692 forbids a name from being both
+    an explicit parameter and a key of an unpacked ``**kwargs`` TypedDict.
+    """
 
-    class DataclassFieldKwargsNotMetadata(TypedDict):
-        """Keyword arguments for `dataclasses.field`."""
-
-        default: NotRequired[object]
-        init: NotRequired[bool]
-        repr: NotRequired[bool]
-        hash: NotRequired[bool | None]
-        compare: NotRequired[bool]
-        kw_only: NotRequired[bool]
-        metadata: NotRequired[Mapping[Hashable, Any]]
+    default: NotRequired[object]
+    default_factory: NotRequired[Callable[[], Any]]
+    init: NotRequired[bool]
+    repr: NotRequired[bool]
+    hash: NotRequired[bool | None]
+    compare: NotRequired[bool]
+    kw_only: NotRequired[bool]
 
 
 def field(
     *,
     converter: Callable[[Any], Any] | None = None,
     metadata: Mapping[Hashable, Any] | None = None,
-    **kwargs: DataclassFieldKwargsNotMetadata,
+    **kwargs: Unpack[DataclassFieldKwargsNotMetadata],
 ) -> Any:
     """Dataclass field with a converter argument.
 
@@ -198,7 +198,10 @@ def field(
             added to the metadata of the field.
         metadata: Additional metadata to add to the field.
             See `dataclasses.field` for more information.
-        **kwargs: Additional keyword arguments to pass to `dataclasses.field`.
+        **kwargs: Additional keyword arguments to pass to `dataclasses.field`,
+            e.g. ``default``, ``default_factory``, ``init``, ``repr``,
+            ``hash``, ``compare``, ``kw_only``. Note that ``metadata`` is not
+            included here; use the ``metadata`` parameter instead.
 
     Returns:
         A dataclass field with the converter in its metadata.
@@ -220,7 +223,13 @@ def field(
         # Add the converter to the metadata
         metadata["converter"] = converter
 
-    return dataclasses.field(metadata=metadata, **kwargs)  # pylint: disable=invalid-field-call
+    # `default` and `default_factory` are mutually exclusive on
+    # `dataclasses.field`, which `DataclassFieldKwargsNotMetadata` doesn't
+    # (yet) express -- see the TODO above. dataclasses.field itself raises at
+    # runtime if both are given.
+    return dataclasses.field(  # type: ignore[call-overload]  # pylint: disable=invalid-field-call
+        metadata=metadata, **kwargs
+    )
 
 
 class DataclassWithConvertersInstance(Protocol):
