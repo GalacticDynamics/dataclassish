@@ -69,7 +69,8 @@ def pytest_gremlins(s: nox.Session, /) -> None:
     s.run(
         "pytest",
         "--gremlins",
-        "tests",
+        # no path arg: falls back to pyproject's testpaths (README.md, src,
+        # tests), so doctests get mutated too, not just tests/
         # pytest-gremlins' own coverage teardown emits a benign
         # CoverageWarning; the project's `filterwarnings = ["error"]`
         # would otherwise turn it into a crash.

@@ -313,6 +313,7 @@ test-cov = [
     { name = "sybil", extra = ["pytest"] },
 ]
 test-mutation = [
+    { name = "attrs" },
     { name = "pytest" },
     { name = "pytest-codspeed" },
     { name = "pytest-gremlins" },
@@ -363,6 +364,7 @@ test-cov = [
     { name = "sybil", extras = ["pytest"], specifier = ">=9.2.0" },
 ]
 test-mutation = [
+    { name = "attrs", specifier = ">=25.4.0" },
     { name = "pytest", specifier = ">=9.1.0" },
     { name = "pytest-codspeed", specifier = ">=5.0.0" },
     { name = "pytest-gremlins", specifier = ">=1.5.1" },

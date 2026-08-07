@@ -56,6 +56,7 @@ test = ["pytest>=9.1.0", "pytest-codspeed>=5.0.0", "sybil[pytest]>=9.2.0"]
 test_cov = [{ "include-group" = "test" }, "pytest-cov>=4.0.0", "attrs>=25.4.0"]
 test_mutation = [
   { "include-group" = "test" },
+  "attrs>=25.4.0",
   "pytest-gremlins>=1.5.1",     # fails if `pytest-cov` is installed
   "pytest-xdist>=3.8.0",
 ]
