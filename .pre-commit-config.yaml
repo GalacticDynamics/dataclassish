@@ -5,7 +5,7 @@ ci:
 
 repos:
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.16.4
+    rev: v4.19.1
     hooks:
       - id: commitizen
         additional_dependencies: [cz-conventional-gitmoji]
@@ -47,21 +47,21 @@ repos:
         args: [--prose-wrap=always]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.15.20"
+    rev: "v0.16.10"
     hooks:
       - id: ruff-check
         args: ["--fix", "--show-fixes"]
       - id: ruff-format
 
   - repo: https://github.com/codespell-project/codespell
-    rev: "v2.4.2"
+    rev: "v2.4.3"
     hooks:
       - id: codespell
         args: ["--toml", "pyproject.toml"]
         additional_dependencies: ["tomli"]
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: "v0.11.0.1"
+    rev: "v0.11.0.1-1"
     hooks:
       - id: shellcheck
 
@@ -80,7 +80,7 @@ repos:
   #       additional_dependencies: ["validate-pyproject-schema-store[all]"]
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: "0.37.4"
+    rev: "0.38.2"
     hooks:
       - id: check-dependabot
       - id: check-github-workflows
