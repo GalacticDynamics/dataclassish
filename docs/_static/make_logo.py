@@ -15,6 +15,8 @@ sharp at any size; for a bitmap, name a .png and give its size::
     uv run docs/_static/make_logo.py --size 2048 big.png
 """
 
+_CLI_DESCRIPTION = "Draw the dataclassish logo: structured data, approximately."
+
 import argparse
 from pathlib import Path
 
@@ -91,8 +93,7 @@ def svg() -> str:
 
 def main() -> None:
     """Parse the command line and save the logo."""
-    description = __doc__.split("\n\n", 1)[1].splitlines()[0]
-    parser = argparse.ArgumentParser(description=description)
+    parser = argparse.ArgumentParser(description=_CLI_DESCRIPTION)
     parser.add_argument(
         "out",
         nargs="?",
