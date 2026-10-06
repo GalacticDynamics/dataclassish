@@ -1,4 +1,6 @@
-"""Benchmarks for `dataclassish`.
+"""Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
+
+Benchmarks for `dataclassish`.
 
 These benchmarks exercise the public, multiple-dispatch-based API of
 ``dataclassish`` across the different object types it supports (mappings and

@@ -1,4 +1,7 @@
-"""Doctest configuration."""
+"""Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
+
+Doctest configuration.
+"""
 
 from collections.abc import Callable, Iterable, Sequence
 from doctest import ELLIPSIS, NORMALIZE_WHITESPACE

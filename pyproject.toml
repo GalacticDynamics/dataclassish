@@ -137,7 +137,6 @@ extend-select = ["ALL"]
 ignore = [
   "ANN401",  # Dynamically typed expressions are disallowed in `**kwargs`
   "COM812",  # For ruff.format
-  "CPY001",  # Project does not include per-file copyright headers
   "D203",    # 1 blank line required before class docstring
   "D213",    # Multi-line docstring summary should start at the first line
   "F811",    # Redefinition of unused '...'  (for plum-dispatch)

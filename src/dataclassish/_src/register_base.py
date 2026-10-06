@@ -1,4 +1,7 @@
-"""Register dispatches for objects."""
+"""Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
+
+Register dispatches for objects.
+"""
 
 __all__: tuple[str, ...] = ()
 

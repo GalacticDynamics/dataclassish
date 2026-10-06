@@ -1,4 +1,7 @@
-"""Test the package metadata."""
+"""Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
+
+Test the package metadata.
+"""
 
 import importlib.metadata
 

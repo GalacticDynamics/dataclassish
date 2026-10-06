@@ -1,4 +1,7 @@
-"""Register dispatches for dataclass objects."""
+"""Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
+
+Register dispatches for dataclass objects.
+"""
 
 __all__: tuple[str, ...] = ()
 
