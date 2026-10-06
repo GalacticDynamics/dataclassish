@@ -91,7 +91,8 @@ def svg() -> str:
 
 def main() -> None:
     """Parse the command line and save the logo."""
-    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    description = __doc__.split("\n\n", 1)[1].splitlines()[0]
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument(
         "out",
         nargs="?",
