@@ -121,8 +121,10 @@ objects. `dataclassish` too supports this method.
 ...     def __init__(self, a, b):
 ...         self.a = a
 ...         self.b = b
+...
 ...     def __repr__(self) -> str:
 ...         return f"HasReplace(a={self.a},b={self.b})"
+...
 ...     def __replace__(self, **changes):
 ...         return type(self)(**(self.__dict__ | changes))
 
@@ -152,6 +154,7 @@ Let's make a custom object and define how `replace` will operate on it.
 ...         self.a = a
 ...         self.b = b
 ...         self.c = c
+...
 ...     def __repr__(self) -> str:
 ...         return f"MyClass(a={self.a},b={self.b},c={self.c})"
 
@@ -213,9 +216,7 @@ This is a bad approach, updating the frozen dataclasses in place:
 A better way might be to create an entirely new object!
 
 ```pycon
->>> newp = {"a": Point(1.5, p["a"].y),
-...         "b": Point(p["b"].x, 4.5),
-...         "c": Point(5.5, p["c"].y)}
+>>> newp = {"a": Point(1.5, p["a"].y), "b": Point(p["b"].x, 4.5), "c": Point(5.5, p["c"].y)}
 
 ```
 
