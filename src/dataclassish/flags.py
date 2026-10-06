@@ -1,6 +1,7 @@
 """Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
 
-flags for ``dataclassish``."""
+flags for ``dataclassish``.
+"""
 
 __all__ = ("FlagConstructionError", "AbstractFlag", "NoFlag", "FilterRepr")
 

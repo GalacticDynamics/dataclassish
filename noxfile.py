@@ -3,7 +3,8 @@
 # ///
 """Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
 
-Nox setup."""
+Nox setup.
+"""
 
 import os
 import shutil

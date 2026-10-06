@@ -1,6 +1,7 @@
 """Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
 
-API for functions in Dataclassish."""
+API for functions in Dataclassish.
+"""
 
 # pylint: disable=duplicate-code
 __all__ = (
