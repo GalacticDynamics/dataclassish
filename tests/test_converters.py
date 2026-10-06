@@ -1,4 +1,6 @@
-"""Test `dataclass.converters`."""
+"""Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
+
+Test `dataclass.converters`."""
 
 import pytest
 

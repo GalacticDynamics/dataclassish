@@ -1,7 +1,9 @@
 # /// script
 #    dependencies = ["nox", "nox_uv"]
 # ///
-"""Nox setup."""
+"""Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
+
+Nox setup."""
 
 import os
 import shutil

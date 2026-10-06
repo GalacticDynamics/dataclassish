@@ -1,4 +1,6 @@
-"""Data types for ``dataclassish``."""
+"""Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
+
+Data types for ``dataclassish``."""
 
 __all__ = ("F",)
 

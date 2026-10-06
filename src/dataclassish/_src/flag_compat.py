@@ -1,4 +1,6 @@
-"""flags for ``dataclassish``."""
+"""Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
+
+flags for ``dataclassish``."""
 
 __all__: tuple[str, ...] = ()
 

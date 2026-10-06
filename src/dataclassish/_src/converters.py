@@ -1,4 +1,6 @@
-"""Converters for dataclass fields.
+"""Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
+
+Converters for dataclass fields.
 
 While `dataclasses.field` itself does not allow for converters (See PEP 712)
 many dataclasses-like libraries do. A very short, very non-exhaustive list

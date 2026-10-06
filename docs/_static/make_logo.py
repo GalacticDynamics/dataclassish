@@ -2,7 +2,9 @@
 # requires-python = ">=3.11"
 # dependencies = ["resvg-py"]
 # ///
-"""Draw the dataclassish logo: structured data, approximately.
+"""Copyright (c) 2024 Nathaniel Starkman. All rights reserved.
+
+Draw the dataclassish logo: structured data, approximately.
 
 A brace opening a record of fields, each a key dot and a wavy tilde for its
 value, beside a plain box: fields for any object, not only a dataclass, and the
