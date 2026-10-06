@@ -15,10 +15,10 @@ sharp at any size; for a bitmap, name a .png and give its size::
     uv run docs/_static/make_logo.py --size 2048 big.png
 """
 
-_CLI_DESCRIPTION = "Draw the dataclassish logo: structured data, approximately."
-
 import argparse
 from pathlib import Path
+
+_CLI_DESCRIPTION = "Draw the dataclassish logo: structured data, approximately."
 
 NAVY, TEAL, PURPLE = "#030a23", "#66a19a", "#7738eb"  # GalacticDynamics' colours
 
