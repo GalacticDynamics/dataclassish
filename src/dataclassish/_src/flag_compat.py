@@ -16,7 +16,7 @@ from .flags import AbstractFlag, FilterRepr, NoFlag
 
 
 @dispatch
-def replace(flag: type[AbstractFlag], _: Any, /, **__: Any) -> Never:  # noqa: ARG001
+def replace(flag: type[AbstractFlag], _: object, /, **__: Any) -> Never:  # noqa: ARG001
     """Raise an error if given an AbstractFlag when replacing.
 
     Raises:
@@ -38,7 +38,7 @@ def replace(flag: type[AbstractFlag], _: Any, /, **__: Any) -> Never:  # noqa: A
 
 
 @dispatch
-def fields(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
+def fields(flag: type[AbstractFlag], _: object, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used to get fields.
 
     Raises:
@@ -62,7 +62,7 @@ def fields(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
 @dispatch
 def asdict(
     flag: type[AbstractFlag],  # noqa: ARG001
-    _: Any,
+    _: object,
     /,
     *,
     dict_factory: api.DictFactory = dict,  # noqa: ARG001
@@ -90,7 +90,7 @@ def asdict(
 @dispatch
 def astuple(
     flag: type[AbstractFlag],  # noqa: ARG001
-    _: Any,
+    _: object,
     /,
     *,
     tuple_factory: api.TupleFactory = tuple,  # noqa: ARG001
@@ -116,7 +116,7 @@ def astuple(
 
 
 @dispatch
-def field_keys(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
+def field_keys(flag: type[AbstractFlag], _: object, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used with ``field_keys``.
 
     Raises:
@@ -138,7 +138,7 @@ def field_keys(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
 
 
 @dispatch
-def field_values(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
+def field_values(flag: type[AbstractFlag], _: object, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used with ``field_values``.
 
     Raises:
@@ -160,7 +160,7 @@ def field_values(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
 
 
 @dispatch
-def field_items(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
+def field_items(flag: type[AbstractFlag], _: object, /) -> Never:  # noqa: ARG001
     """Raise an error if an AbstractFlag is used with ``field_items``.
 
     Raises:
@@ -186,7 +186,7 @@ def field_items(flag: type[AbstractFlag], _: Any, /) -> Never:  # noqa: ARG001
 
 
 @dispatch  # type: ignore[no-redef]
-def replace(flag: type[NoFlag], obj: Any, /, **kwargs: Any) -> Any:  # noqa: ARG001
+def replace(flag: type[NoFlag], obj: object, /, **kwargs: Any) -> Any:  # noqa: ARG001
     """Replace the fields of an object, absent any modifying flags.
 
     Examples:
@@ -203,7 +203,7 @@ def replace(flag: type[NoFlag], obj: Any, /, **kwargs: Any) -> Any:  # noqa: ARG
 
 
 @dispatch  # type: ignore[no-redef]
-def fields(flag: type[NoFlag], obj: Any, /) -> tuple[Field, ...]:  # type: ignore[type-arg]  # noqa: ARG001
+def fields(flag: type[NoFlag], obj: object, /) -> tuple[Field, ...]:  # type: ignore[type-arg]  # noqa: ARG001
     """Return fields of the object, absent any modifying flags.
 
     Examples:
@@ -223,7 +223,7 @@ def fields(flag: type[NoFlag], obj: Any, /) -> tuple[Field, ...]:  # type: ignor
 @dispatch  # type: ignore[no-redef]
 def asdict(
     flag: type[NoFlag],  # noqa: ARG001
-    obj: Any,
+    obj: object,
     /,
     *,
     dict_factory: api.DictFactory = dict,
@@ -248,7 +248,7 @@ def asdict(
 @dispatch  # type: ignore[no-redef]
 def astuple(
     flag: type[NoFlag],  # noqa: ARG001
-    obj: Any,
+    obj: object,
     /,
     *,
     tuple_factory: api.TupleFactory = tuple,
@@ -268,7 +268,7 @@ def astuple(
 
 
 @dispatch  # type: ignore[no-redef]
-def field_keys(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG001
+def field_keys(flag: type[NoFlag], obj: object, /) -> Iterable[Any]:  # noqa: ARG001
     """Return the keys of an object.
 
     Examples:
@@ -284,7 +284,7 @@ def field_keys(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG00
 
 
 @dispatch  # type: ignore[no-redef]
-def field_values(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG001
+def field_values(flag: type[NoFlag], obj: object, /) -> Iterable[Any]:  # noqa: ARG001
     """Return the values of an object.
 
     Examples:
@@ -300,7 +300,7 @@ def field_values(flag: type[NoFlag], obj: Any, /) -> Iterable[Any]:  # noqa: ARG
 
 
 @dispatch  # type: ignore[no-redef]
-def field_items(flag: type[NoFlag], obj: Any, /) -> Iterable[tuple[Any, Any]]:  # noqa: ARG001
+def field_items(flag: type[NoFlag], obj: object, /) -> Iterable[tuple[Any, Any]]:  # noqa: ARG001
     """Return the items of an object.
 
     Examples:
@@ -320,7 +320,7 @@ def field_items(flag: type[NoFlag], obj: Any, /) -> Iterable[tuple[Any, Any]]:  
 
 
 @dispatch  # type: ignore[no-redef]
-def replace(_: type[FilterRepr], obj: Any, /, **kwargs: Any) -> Any:
+def replace(_: type[FilterRepr], obj: object, /, **kwargs: Any) -> Any:
     """Replace the fields of an object, filtering based on repr.
 
     Raises:
@@ -365,7 +365,7 @@ def replace(_: type[FilterRepr], obj: Any, /, **kwargs: Any) -> Any:
 
 
 @dispatch  # type: ignore[no-redef]
-def fields(_: type[FilterRepr], obj: Any) -> tuple[Field, ...]:  # type: ignore[type-arg]
+def fields(_: type[FilterRepr], obj: object) -> tuple[Field, ...]:  # type: ignore[type-arg]
     """Return fields of the object, filtering based on repr.
 
     Examples:
@@ -396,7 +396,7 @@ def fields(_: type[FilterRepr], obj: Any) -> tuple[Field, ...]:  # type: ignore[
 
 @dispatch  # type: ignore[no-redef]
 def asdict(
-    flag: type[FilterRepr], obj: Any, /, *, dict_factory: api.DictFactory = dict
+    flag: type[FilterRepr], obj: object, /, *, dict_factory: api.DictFactory = dict
 ) -> dict[str, Any]:
     """Return the fields as a mapping, filtering based on repr.
 
@@ -431,7 +431,7 @@ def asdict(
 @dispatch  # type: ignore[no-redef]
 def astuple(
     _: type[FilterRepr],
-    obj: Any,
+    obj: object,
     /,
     *,
     tuple_factory: api.TupleFactory = tuple,
@@ -467,7 +467,7 @@ def astuple(
 
 
 @dispatch
-def get_field(_: type[FilterRepr], obj: Any, field_name: str) -> Any:
+def get_field(_: type[FilterRepr], obj: object, field_name: str) -> Any:
     """Get the value of a field from an object, filtering based on repr.
 
     Raises:
@@ -516,7 +516,7 @@ def get_field(_: type[FilterRepr], obj: Any, field_name: str) -> Any:
 
 
 @dispatch  # type: ignore[no-redef]
-def field_keys(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
+def field_keys(_: type[FilterRepr], obj: object) -> tuple[Any, ...]:
     """Return the keys of an object, filtering based on repr.
 
     Examples:
@@ -548,7 +548,7 @@ def field_keys(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
 
 
 @dispatch  # type: ignore[no-redef]
-def field_values(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
+def field_values(_: type[FilterRepr], obj: object) -> tuple[Any, ...]:
     """Return the values of an object, filtering based on repr.
 
     Examples:
@@ -580,7 +580,7 @@ def field_values(_: type[FilterRepr], obj: Any) -> tuple[Any, ...]:
 
 
 @dispatch  # type: ignore[no-redef]
-def field_items(_: type[FilterRepr], obj: Any) -> tuple[tuple[Any, Any], ...]:
+def field_items(_: type[FilterRepr], obj: object) -> tuple[tuple[Any, Any], ...]:
     """Return the items of an object, filtering based on repr.
 
     Examples:
