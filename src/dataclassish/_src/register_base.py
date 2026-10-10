@@ -22,7 +22,7 @@ V = TypeVar("V")
 
 
 @dispatch
-def get_field(obj: Any, k: str, /) -> Any:
+def get_field(obj: object, k: str, /) -> Any:
     """Get a field of an object by name.
 
     This default implementation is just to call `getattr`.
@@ -69,7 +69,7 @@ def _recursive_replace_helper(obj: object, k: str, v: Any, /) -> Any:
 
 
 @dispatch
-def field_keys(obj: Any, /) -> tuple[str, ...]:
+def field_keys(obj: object, /) -> tuple[str, ...]:
     """Yield the field names from the `dataclassish.fields`.
 
     Args:
@@ -100,7 +100,7 @@ def field_keys(obj: Any, /) -> tuple[str, ...]:
 
 
 @dispatch
-def field_values(obj: Any, /) -> tuple[Any, ...]:
+def field_values(obj: object, /) -> tuple[Any, ...]:
     """Return the field values from the `dataclassish.fields`.
 
     Args:
@@ -131,7 +131,7 @@ def field_values(obj: Any, /) -> tuple[Any, ...]:
 
 
 @dispatch
-def field_items(obj: Any) -> tuple[tuple[str, Any], ...]:
+def field_items(obj: object) -> tuple[tuple[str, Any], ...]:
     """Return the field names and values from the `dataclassish.fields`.
 
     Args:
