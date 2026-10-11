@@ -24,7 +24,7 @@ env:
 jobs:
   benchmarks:
     name: Run benchmarks
-    runs-on: ubuntu-latest
+    runs-on: codspeed-macro
     permissions:
       contents: read
       id-token: write # for OpenID Connect authentication with CodSpeed
@@ -42,5 +42,5 @@ jobs:
       - name: Run benchmarks
         uses: CodSpeedHQ/action@f99becdce5e5d51fd556489ebef684f4ecfd6286 # v4.18.5
         with:
-          mode: simulation
+          mode: walltime
           run: uv run --frozen pytest benchmarks/ --codspeed -p no:sybil
