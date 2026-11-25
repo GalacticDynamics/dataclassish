@@ -1,6 +1,7 @@
 ci:
   autoupdate_commit_msg: "chore: update pre-commit hooks"
   autofix_commit_msg: "style: pre-commit fixes"
+  skip: [graphify-update]
   autoupdate_schedule: "quarterly"
 
 repos:
@@ -25,12 +26,14 @@ repos:
     rev: "v6.0.0"
     hooks:
       - id: check-added-large-files
+        exclude: ^graphify-out/graph\.json$
       - id: check-case-conflict
       - id: check-merge-conflict
       - id: check-symlinks
       - id: check-yaml
       - id: debug-statements
       - id: end-of-file-fixer
+        exclude: ^graphify-out/graph\.json$
       - id: mixed-line-ending
       - id: name-tests-test
         args: ["--pytest-test-first"]
@@ -45,6 +48,7 @@ repos:
       - id: prettier
         types_or: [yaml, markdown, html, css, scss, javascript, json]
         args: [--prose-wrap=always]
+        exclude: ^graphify-out/graph\.json$
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: "v0.16.10"
@@ -59,6 +63,7 @@ repos:
       - id: codespell
         args: ["--toml", "pyproject.toml"]
         additional_dependencies: ["tomli"]
+        exclude: ^graphify-out/graph\.json$
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: "v0.11.0.1-1"
@@ -72,6 +77,19 @@ repos:
         language: pygrep
         entry: PyBind|Numpy|Cmake|CCache|Github|PyTest
         exclude: .pre-commit-config.yaml
+
+  # Keeps the committed code graph (graphify-out/graph.json) in step with the code.
+  # Like a formatter: if the graph changed, stage it and commit again.
+  # Skip once with `SKIP=graphify-update git commit ...`.
+  - repo: local
+    hooks:
+      - id: graphify-update
+        name: graphify update
+        language: python
+        additional_dependencies: ["graphifyy==0.9.119"]
+        entry: env PYTHONHASHSEED=0 graphify update . --force
+        pass_filenames: false
+        always_run: true
 
   # - repo: https://github.com/abravalheri/validate-pyproject
   #   rev: "v0.23"
