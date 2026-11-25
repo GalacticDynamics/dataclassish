@@ -477,6 +477,9 @@ then click the link above.
 
 We welcome contributions!
 
+Contributors and AI assistants: this repository ships a queryable code graph —
+see [CONTRIBUTING.md](.github/CONTRIBUTING.md#the-code-graph).
+
 <!-- prettier-ignore-start -->
 [actions-badge]:            https://github.com/GalacticDynamics/dataclassish/workflows/CI/badge.svg
 [actions-link]:             https://github.com/GalacticDynamics/dataclassish/actions
